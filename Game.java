@@ -13,6 +13,9 @@ public class Game
     
     public Game()
     {
-        aGameInstance = new GameEngine();
+        this.aGameInstance = new GameEngine();
+        this.aUI = new UserInterfaceController(this.aGameInstance);
+        
+        this.aGameInstance.play();
     }
 }

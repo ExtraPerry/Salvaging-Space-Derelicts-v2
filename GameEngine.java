@@ -184,11 +184,12 @@ public class GameEngine
      * Start Up message of the game.
      */
     private void printWelcome(){
-        System.out.println("Welcome to the World of Zuul!");
-        System.out.println("World of Zuul is a new, incredibly boring adventure game.");
-        System.out.println("Type 'help' if you need help.");
+        System.out.println("Welcome to Salvaging Space Derelicts.");
         System.out.println("");
-        System.out.println("You are outside the main entrance of the university");
+        System.out.println("As you fly though space looking for the next oportunity.");
+        System.out.println("A wreck shows up on your scanner.");
+        System.out.println("You jump on the occasion and enter the airlock starting your adventure.");
+        System.out.println("");
         this.printLocationInfo();
     }   //printWelcome()
     
