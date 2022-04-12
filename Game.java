@@ -15,7 +15,6 @@ public class Game
     {
         this.aGameInstance = new GameEngine();
         this.aUI = new UserInterfaceController(this.aGameInstance);
-        
-        this.aGameInstance.play();
+        this.aGameInstance.setUI(this.aUI);
     }
 }

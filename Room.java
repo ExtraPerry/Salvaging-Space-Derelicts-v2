@@ -8,14 +8,16 @@ public class Room
 {
     private String aDescription; //The description of the room (a.k.a it's name used when returning information to the player)
     private HashMap<String, Room> aExits; //The rooms exits and thus the rooms it'll link to
+    private String aImageURL; //Is meant to store the Image that'll represent the Room's file location.
     
     /**
      * Builds the Object from "this" class. 
-     * (Only taking in the description as the "Exits" must be "null" at first).
+     * (Only taking in the description as the "Exits" must be "null" at first, but will also not set an Image for the Room).
      */
-    public Room(final String pDescription){
+    public Room(final String pDescription, final String pImageURL){
         this.aDescription = pDescription; //Set description
         this.aExits = new HashMap<String, Room>(); //init the HashMap
+        this.aImageURL = pImageURL; //Sets the ImageURL
     }   //Room()
     
     /**
@@ -35,16 +37,14 @@ public class Room
     /**
      * Returns the wanted exit using a string in parameters.
      */
-    public Room getExit(final String pDirection)
-    {
+    public Room getExit(final String pDirection){
         return this.aExits.get(pDirection);
     }
     
     /**
      * Returns available exits of the room. (String)
      */
-    public String getExitString()
-    {
+    public String getExitString(){
         String vOutput = ""; //Init String
         
         Set<String> keys = this.aExits.keySet(); //Get all keys from the HashMap
@@ -61,8 +61,14 @@ public class Room
     /**
      * Returns a long description of the Room.
      */
-    public String getLongDescription()
-    {
+    public String getLongDescription(){
         return "You are at : " + this.getDescription() + " | Viable paths are : " + this.getExitString();
+    }
+    
+    /**
+     * Return the File Path of the Rooms Image.
+     */
+    public String getImageFilePath(){
+        return this.aImageURL;
     }
 } // Room

@@ -1,4 +1,4 @@
-import java.util.Scanner;
+import java.util.StringTokenizer;
 import java.util.HashMap;
 import java.util.Set;
 
@@ -21,7 +21,6 @@ import java.util.Set;
 public class Parser 
 {
     private CommandWords aValidCommands;  // (voir la classe CommandWords)
-    private Scanner      aReader;         // permettra de lire les commandes au clavier
 
     /**
      * Constructeur par defaut qui cree les 2 objets prevus pour les attributs
@@ -29,33 +28,30 @@ public class Parser
     public Parser() 
     {
         this.aValidCommands = new CommandWords();
-        this.aReader        = new Scanner( System.in );
         // System.in designe le clavier, comme System.out designe l'ecran
     } // Parser()
 
     /**
      * @return The next command from the user.
      */
-    public Command getCommand() 
+    public Command getCommand(final String pText) 
     {
-        String vInputLine;    // contiendra toute la ligne tapee
         String vWord1 = null;
         String vWord2 = null;
-
-        System.out.print( "> " );  // affiche le prompt (invite de commande)
-
-        vInputLine = this.aReader.nextLine(); // lit la ligne tapee au clavier
-
+        
         // cherche jusqu'a 2 mots dans la ligne tapee
-        Scanner vTokenizer = new Scanner( vInputLine );
-        if ( vTokenizer.hasNext() ) {     // y a-t-il un mot suivant ?
-            vWord1 = vTokenizer.next();      // recupere le premier mot
-            if ( vTokenizer.hasNext() ) { // y a-t-il encore un mot suivant ?
-                vWord2 = vTokenizer.next();  // recupere le deuxieme mot
-                // note : on ignore tout le reste de la ligne tapee !
-            } // if
-        } // if
-
+        StringTokenizer vTokenizer = new StringTokenizer(pText);
+        if(vTokenizer.hasMoreTokens()){ //Look if token has a word.
+            vWord1 = vTokenizer.nextToken(); //If token has a word then remember it and move to the next word.
+        }else{
+            vWord1 = null; //If token has no word then define it as null.
+        }
+        if(vTokenizer.hasMoreTokens()){ //Look if token has a second word.
+            vWord2 = vTokenizer.nextToken(); //If token has a second word then remember it and move to the next word. (However since we only want the first two words it doesn't matter if we go to the next word).
+        }else{
+            vWord2 = null; //If token has no word then define it as null.
+        }
+        
         // Verifie si le premier mot est une commande connue.
         // Si oui, cree un objet Command avec ce mot. (vWord2 peut etre null)
         // Sinon, cree une commande vide avec "null" (pour dire 'commande inconnue').

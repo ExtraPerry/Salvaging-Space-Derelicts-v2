@@ -9,6 +9,7 @@ public class GameEngine
     private Room aCurrentRoom; //The room the player is currently in
     private Parser aParser; //Player inputs
     private HashMap<String, Room> aGameRooms;
+    private UserInterfaceController aUI;
     
     /**
      * Builds the Object from "this" class.
@@ -18,31 +19,36 @@ public class GameEngine
         this.aParser = new Parser();
     }   //Game()
     
+    public void setUI(UserInterfaceController pUI){
+        this.aUI = pUI; //Sets UI.
+        this.printWelcome(); //Welcome message
+    }
+    
     /**
      * Used to create all of the "Rooms" inside of the game.
      * Used at game startup and is the map in itself.
      */
     private void createRooms(){
         //All rooms
-        Room vAirlock = new Room("Airlock");
-        Room vStorage = new Room("Storage");
-        Room vMainHall = new Room("Main Hall");
-        Room vSafe = new Room("Safe Room");
-        Room vPilotDorm = new Room("Pilot Dorm");
-        Room vBridge = new Room("Bridge");
-        Room vEngineering = new Room("Engineering");
-        Room vReactor = new Room("Reactor Room");
-        Room vEngine1 = new Room("Engine Room 1");
-        Room vEngine2 = new Room("Engine Room 2");
-        Room vEngine3 = new Room("Engine Room 3");
-        Room vEngine4 = new Room("Engine Room 4");
-        Room vDorms = new Room("Dorms");
-        Room vMedical = new Room("Medical Room");
-        Room vSports = new Room("Sports Room");
-        Room vCantine = new Room("Cantine");
-        Room vKitching = new Room("Kitching");
-        Room vScienceAndMonitoring = new Room("Science and Monitoring");
-        Room vObservationDome = new Room("Observation Dome");
+        Room vAirlock = new Room("Airlock","Images/ProgrammerArt/Airlock.png");
+        Room vStorage = new Room("Storage","Images/ProgrammerArt/CargoBay.png");
+        Room vMainHall = new Room("Main Hall","Images/ProgrammerArt/MainRoom.png");
+        Room vSafe = new Room("Safe Room","Images/ProgrammerArt/SafeRoom.png");
+        Room vPilotDorm = new Room("Pilot Dorm","Images/ProgrammerArt/PilotDorm.png");
+        Room vBridge = new Room("Bridge","Images/ProgrammerArt/Bridge.png");
+        Room vEngineering = new Room("Engineering","Images/ProgrammerArt/Engineering.png");
+        Room vReactor = new Room("Reactor Room","Images/ProgrammerArt/Reactor.png");
+        Room vEngine1 = new Room("Engine Room 1","Images/ProgrammerArt/EngineRoom1.png");;
+        Room vEngine2 = new Room("Engine Room 2","Images/ProgrammerArt/EngineRoom2.png");
+        Room vEngine3 = new Room("Engine Room 3","Images/ProgrammerArt/EngineRoom3.png");
+        Room vEngine4 = new Room("Engine Room 4","Images/ProgrammerArt/EngineRoom4.png");
+        Room vDorms = new Room("Dorms","Images/ProgrammerArt/Dorms.png");
+        Room vMedical = new Room("Medical Room","Images/ProgrammerArt/MedicalBay.png");
+        Room vSports = new Room("Sports Room","Images/ProgrammerArt/FreeArea.png");
+        Room vCantine = new Room("Cafeteria","Images/ProgrammerArt/Cafeteria.png");
+        Room vKitching = new Room("Kitching","Images/ProgrammerArt/Kitchen.png");
+        Room vScienceAndMonitoring = new Room("Science and Monitoring","Images/ProgrammerArt/ScienceAndMonitoring.png");
+        Room vObservationDome = new Room("Observation Dome","Images/ProgrammerArt/ObservationDome.png");
         
         
         //Airlock Exits
@@ -136,25 +142,13 @@ public class GameEngine
     }   //createRooms()
     
     /**
-     * Starts the game. (in essence it is the games instance)
-     */
-    public void play(){
-        this.printWelcome(); //Welcome message
-        boolean vFinished = false; //boolean used to determine if the game should end (if true => game ends)
-        while(vFinished == false){ //Game loop (ends when the game ends)
-            vFinished = this.processCommand(aParser.getCommand()); //any command sent in the console is sent here (returns true if the game ends)
-        }
-        System.out.println("--- The End ---"); //End game message
-    }   //play()
-    
-    /**
      * Sends the player to the next selected room by "Command"'s order.
      * Param = Command.
      * return = void.
      */
     private void goRoom(final Command pCommand){
         if (!(pCommand.hasSecondWord())){ //Checks if the go command has a second word
-            System.out.println("Go where ?"); //If the go command has no second word asks the player where to go
+            this.aUI.println("Go where ?"); //If the go command has no second word asks the player where to go
             return;
         }
         
@@ -163,11 +157,12 @@ public class GameEngine
         vNextRoom = this.aCurrentRoom.getExit(pCommand.getSecondWord().toLowerCase()); //Get the room that the player wants to go to (null if direction is not available)
         
         if (vNextRoom == null){ //If direction is null then direction is Unknown
-            System.out.println("Unknown Direction"); //Tells the player that the direction is incorrect
+            this.aUI.println("Unknown Direction"); //Tells the player that the direction is incorrect
             return;
         }
         
         this.aCurrentRoom = vNextRoom; //Sends the player to the next room
+        this.aUI.setImage(this.aCurrentRoom.getImageFilePath()); //Changes the image to that of the next room.
         this.printLocationInfo(); //Tells the player info about the next room
     }   //goRoom()
 
@@ -175,21 +170,20 @@ public class GameEngine
      * Gets the Exits from the room you are currently in. (Also a Command).
      * Returns a String.
      */
-    private void printLocationInfo()
-    {
-        System.out.println(aCurrentRoom.getLongDescription()); //Tells the player a Long description about the room they are in.
+    private void printLocationInfo(){
+        this.aUI.println(aCurrentRoom.getLongDescription()); //Tells the player a Long description about the room they are in.
     }   //printLocationInfo()
     
     /**
      * Start Up message of the game.
      */
     private void printWelcome(){
-        System.out.println("Welcome to Salvaging Space Derelicts.");
-        System.out.println("");
-        System.out.println("As you fly though space looking for the next oportunity.");
-        System.out.println("A wreck shows up on your scanner.");
-        System.out.println("You jump on the occasion and enter the airlock starting your adventure.");
-        System.out.println("");
+        this.aUI.println("Welcome to Salvaging Space Derelicts.");
+        this.aUI.println("");
+        this.aUI.println("As you fly though space looking for the next oportunity.");
+        this.aUI.println("A wreck shows up on your scanner.");
+        this.aUI.println("You jump on the occasion and enter the airlock starting your adventure.");
+        this.aUI.println("");
         this.printLocationInfo();
     }   //printWelcome()
     
@@ -200,10 +194,10 @@ public class GameEngine
         if(pCommand.hasSecondWord()){
             String vSecondWord = pCommand.getSecondWord().toLowerCase();
             if(this.aParser.getCommandDescription(pCommand.getSecondWord().toLowerCase()) != null){
-                System.out.print("The command called \"" + vSecondWord.substring(0,1).toUpperCase() + vSecondWord.substring(1).toLowerCase() + "\" is for : ");
-                System.out.println(this.aParser.getCommandDescription(vSecondWord));
+                this.aUI.print("The command called \"" + vSecondWord.substring(0,1).toUpperCase() + vSecondWord.substring(1).toLowerCase() + "\" is for : ");
+                this.aUI.println(this.aParser.getCommandDescription(vSecondWord));
             }else{
-                System.out.println("" + pCommand.getSecondWord().substring(0,1).toUpperCase() + vSecondWord.substring(1).toLowerCase() + " is not an existing command.");
+                this.aUI.println("" + pCommand.getSecondWord().substring(0,1).toUpperCase() + vSecondWord.substring(1).toLowerCase() + " is not an existing command.");
             }
         }else{
             System.out.println("Your command words are:");
@@ -215,7 +209,7 @@ public class GameEngine
                 }
                 vOutput += vValidCommandList[i];
             }
-            System.out.println("" + vOutput + ".");
+            this.aUI.println("" + vOutput + ".");
         }
     }
     
@@ -224,7 +218,7 @@ public class GameEngine
      */
     private boolean quit(final Command pCommand){
         if (pCommand.hasSecondWord()){ //Checks if quit has a second word
-            System.out.println("Quit what ?"); //If quit has a second word ask what the player wants to quit.
+            this.aUI.println("Quit what ?"); //If quit has a second word ask what the player wants to quit.
             return false; //Don't quit the game (return => false)
         }
         return true; //Quit the game (return => true)
@@ -241,7 +235,16 @@ public class GameEngine
      * Use command. Let's the player use an item.
      */
     private void use(){
-        System.out.println("You used an item called thin air GG !");
+        this.aUI.println("You used an item called thin air GG !");
+    }
+    
+    public void interpretUITextCommand(final String pText){
+        this.aUI.println("> " + pText + ""); //Send to log the command that was read.
+        Command vCommand = this.aParser.getCommand(pText); //Translate Text into usable Command Words.
+        boolean vExitCondition = this.processCommand(vCommand); //Process the command words.
+        if(vExitCondition){
+            this.endProgram();
+        }
     }
     
     /**
@@ -266,11 +269,19 @@ public class GameEngine
                     use();
                     return false;
                 case "merp":
-                    System.out.println("The Sergal goes Merp and the Cheese Wedge be Yellow !");
+                    this.aUI.println("The Sergal goes Merp and the Cheese Wedge be Yellow !");
                     return false;
             }
         }
-        System.out.println("I don't know what you mean...");
+        this.aUI.println("I don't know what you mean...");
         return false;
+    }
+    
+    /**
+     * Used to end the Program.
+     */
+    private void endProgram(){
+        this.aUI.println("The End");
+        System.exit(0); //Ends the program.
     }
 } // Game
