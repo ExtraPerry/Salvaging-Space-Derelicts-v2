@@ -10,6 +10,7 @@ public class GameEngine
     private Parser aParser; //Player inputs
     private HashMap<String, Room> aGameRooms;
     private UserInterfaceController aUI;
+    private Inventory aInventory;
     
     /**
      * Builds the Object from "this" class.
