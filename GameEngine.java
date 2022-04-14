@@ -20,10 +20,13 @@ public class GameEngine
         this.aParser = new Parser();
     }   //Game()
     
+    /**
+     * Assigns the UI to the game engine in order to let it return feedback to the player.
+     */
     public void setUI(UserInterfaceController pUI){
         this.aUI = pUI; //Sets UI.
         this.printWelcome(); //Welcome message
-    }
+    }   //setUI()
     
     /**
      * Used to create all of the "Rooms" inside of the game.
@@ -31,25 +34,25 @@ public class GameEngine
      */
     private void createRooms(){
         //All rooms
-        Room vAirlock = new Room("Airlock","Images/ProgrammerArt/Airlock.png");
-        Room vStorage = new Room("Storage","Images/ProgrammerArt/CargoBay.png");
-        Room vMainHall = new Room("Main Hall","Images/ProgrammerArt/MainRoom.png");
-        Room vSafe = new Room("Safe Room","Images/ProgrammerArt/SafeRoom.png");
-        Room vPilotDorm = new Room("Pilot Dorm","Images/ProgrammerArt/PilotDorm.png");
-        Room vBridge = new Room("Bridge","Images/ProgrammerArt/Bridge.png");
-        Room vEngineering = new Room("Engineering","Images/ProgrammerArt/Engineering.png");
-        Room vReactor = new Room("Reactor Room","Images/ProgrammerArt/Reactor.png");
-        Room vEngine1 = new Room("Engine Room 1","Images/ProgrammerArt/EngineRoom1.png");;
-        Room vEngine2 = new Room("Engine Room 2","Images/ProgrammerArt/EngineRoom2.png");
-        Room vEngine3 = new Room("Engine Room 3","Images/ProgrammerArt/EngineRoom3.png");
-        Room vEngine4 = new Room("Engine Room 4","Images/ProgrammerArt/EngineRoom4.png");
-        Room vDorms = new Room("Dorms","Images/ProgrammerArt/Dorms.png");
-        Room vMedical = new Room("Medical Room","Images/ProgrammerArt/MedicalBay.png");
-        Room vSports = new Room("Sports Room","Images/ProgrammerArt/FreeArea.png");
-        Room vCantine = new Room("Cafeteria","Images/ProgrammerArt/Cafeteria.png");
-        Room vKitching = new Room("Kitching","Images/ProgrammerArt/Kitchen.png");
-        Room vScienceAndMonitoring = new Room("Science and Monitoring","Images/ProgrammerArt/ScienceAndMonitoring.png");
-        Room vObservationDome = new Room("Observation Dome","Images/ProgrammerArt/ObservationDome.png");
+        Room vAirlock = new Room("Airlock","Images/ProgrammerArt_640x360px/Airlock.png");
+        Room vStorage = new Room("Storage","Images/ProgrammerArt_640x360px/CargoBay.png");
+        Room vMainHall = new Room("Main Hall","Images/ProgrammerArt_640x360px/MainRoom.png");
+        Room vSafe = new Room("Safe Room","Images/ProgrammerArt_640x360px/SafeRoom.png");
+        Room vPilotDorm = new Room("Pilot Dorm","Images/ProgrammerArt_640x360px/PilotDorm.png");
+        Room vBridge = new Room("Bridge","Images/ProgrammerArt_640x360px/Bridge.png");
+        Room vEngineering = new Room("Engineering","Images/ProgrammerArt_640x360px/Engineering.png");
+        Room vReactor = new Room("Reactor Room","Images/ProgrammerArt_640x360px/Reactor.png");
+        Room vEngine1 = new Room("Engine Room 1","Images/ProgrammerArt_640x360px/EngineRoom1.png");;
+        Room vEngine2 = new Room("Engine Room 2","Images/ProgrammerArt_640x360px/EngineRoom2.png");
+        Room vEngine3 = new Room("Engine Room 3","Images/ProgrammerArt_640x360px/EngineRoom3.png");
+        Room vEngine4 = new Room("Engine Room 4","Images/ProgrammerArt_640x360px/EngineRoom4.png");
+        Room vDorms = new Room("Dorms","Images/ProgrammerArt_640x360px/Dorms.png");
+        Room vMedical = new Room("Medical Room","Images/ProgrammerArt_640x360px/MedicalBay.png");
+        Room vSports = new Room("Sports Room","Images/ProgrammerArt_640x360px/FreeArea.png");
+        Room vCantine = new Room("Cafeteria","Images/ProgrammerArt_640x360px/Cafeteria.png");
+        Room vKitching = new Room("Kitching","Images/ProgrammerArt_640x360px/Kitchen.png");
+        Room vScienceAndMonitoring = new Room("Science and Monitoring","Images/ProgrammerArt_640x360px/ScienceAndMonitoring.png");
+        Room vObservationDome = new Room("Observation Dome","Images/ProgrammerArt_640x360px/ObservationDome.png");
         
         
         //Airlock Exits
@@ -212,7 +215,7 @@ public class GameEngine
             }
             this.aUI.println("" + vOutput + ".");
         }
-    }
+    }   //printHelp()
     
     /**
      * Quit command. Returns true (boolean) if the player wants to quit the game.
@@ -223,30 +226,34 @@ public class GameEngine
             return false; //Don't quit the game (return => false)
         }
         return true; //Quit the game (return => true)
-    }
+    }   //quit()
     
     /**
      * Look command. Tells the player info on their current location.
      */
     private void look(){
         this.printLocationInfo();
-    }
+    }   //look()
     
     /**
      * Use command. Let's the player use an item.
      */
     private void use(){
         this.aUI.println("You used an item called thin air GG !");
-    }
+    }   //use()
     
+    /**
+     * Reads the text written by the player and translates it to a readable command format.
+     * Then sends it to be processed and run if recongnised.
+     */
     public void interpretUITextCommand(final String pText){
         this.aUI.println("> " + pText + ""); //Send to log the command that was read.
         Command vCommand = this.aParser.getCommand(pText); //Translate Text into usable Command Words.
         boolean vExitCondition = this.processCommand(vCommand); //Process the command words.
         if(vExitCondition){
-            this.endProgram();
+            this.endGame();
         }
-    }
+    }   //interpretUITextCommand()
     
     /**
      * Command manager used after the commands are filtered through the Parser class.
@@ -276,13 +283,13 @@ public class GameEngine
         }
         this.aUI.println("I don't know what you mean...");
         return false;
-    }
+    }   //processCommand()
     
     /**
-     * Used to end the Program.
+     * Used to end the Game.
      */
-    private void endProgram(){
+    private void endGame(){
         this.aUI.println("The End");
-        System.exit(0); //Ends the program.
-    }
+        this.aUI.enableTextField(false);
+    }   //endProgram()
 } // Game
