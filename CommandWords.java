@@ -23,11 +23,12 @@ public class CommandWords
     {
         this.aValidCommands = new HashMap<String, String>();
         
-        this.aValidCommands.put("go","Moves the player from room to room.");
+        this.aValidCommands.put("go","Moves the player from room to room, using north, east, south, west, above and below.");
         this.aValidCommands.put("help","Gives the player a list of all available commands.");
         this.aValidCommands.put("quit","Ends the game instance.");
-        this.aValidCommands.put("look","Gives the player a description of the room and it's viable exits.");
+        this.aValidCommands.put("look","Gives the player a description of the room, it's viable exits and items inside the room.");
         this.aValidCommands.put("use","Makes the player use an item.");
+        this.aValidCommands.put("back","Makes the player return to the previous room they were in until there is no room to return to. You can add a number after the command to go back multiple times.");
         this.aValidCommands.put("merp","Easter Egg ig :D");
     } // CommandWords()
 

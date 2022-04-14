@@ -6,11 +6,10 @@ import java.util.Set;
  */
 public class GameEngine
 {
-    private Room aCurrentRoom; //The room the player is currently in
-    private Parser aParser; //Player inputs
-    private HashMap<String, Room> aGameRooms;
-    private UserInterfaceController aUI;
-    private Inventory aInventory;
+    private Room aCurrentRoom; //The room the player is currently in.
+    private Parser aParser; //Player inputs.
+    private HashMap<String, Room> aGameRooms; //All Rooms in the game.
+    private UserInterfaceController aUI; //GUI.
     
     /**
      * Builds the Object from "this" class.
@@ -119,6 +118,18 @@ public class GameEngine
         //Observation Dome Exits
         vObservationDome.setExit("below",vMainHall);
         
+        
+        //Arilock Items.
+        Item vDigitalPad = new Item("Digi Pad", 50, 1, "Digi Pad containing some basic information about the ship");
+        vAirlock.addItemToInventory(vDigitalPad);
+        
+        //Storage Items.
+        Item vDamagedCrate = new Item("Damaged Crate", 750, 1, "A Damaged Crate, it's contents seem to be destroyed but maybe you could sell it as scraps.");
+        vStorage.addItemToInventory(vDamagedCrate);
+        Item vIntactCrate = new Item("Intact Crate", 7500, 1, "An Intact Crate, you are unable to open it but even so it'll sell well.");
+        vStorage.addItemToInventory(vIntactCrate);
+        
+        
         this.aCurrentRoom = vAirlock;
         
         //Init the HashMap first.
@@ -165,17 +176,59 @@ public class GameEngine
             return;
         }
         
-        this.aCurrentRoom = vNextRoom; //Sends the player to the next room
-        this.aUI.setImage(this.aCurrentRoom.getImageFilePath()); //Changes the image to that of the next room.
-        this.printLocationInfo(); //Tells the player info about the next room
+        vNextRoom.setPreviousRoom(this.aCurrentRoom); //Sets the previous room (current room at this moment in the code) the player was in right before going into the next room.
+        
+        this.updateLocation(vNextRoom);
     }   //goRoom()
 
+    /**
+     * Updates the players position to the room sent in parameters.
+     */
+    private void updateLocation(final Room pNextRoom){
+        this.aCurrentRoom = pNextRoom; //Sends the player to the next room
+        this.aUI.setImage(this.aCurrentRoom.getImageFilePath()); //Changes the image to that of the next room.
+        this.printLocationInfo(); //Tells the player info about the next room
+    }   //updateLocation()
+    
+    /**
+     * Back command that will send the player to the previous room or rooms.
+     */
+    private void back(final Command pCommand){
+        int vStack;
+        if(pCommand.hasSecondWord()){
+            try{
+                vStack = Integer.parseInt(pCommand.getSecondWord());
+            }catch(NumberFormatException vException){
+                String vSecondWord = pCommand.getSecondWord();
+                this.aUI.println(vSecondWord.substring(0,1).toUpperCase() + vSecondWord.substring(1).toLowerCase() + " is not a number.");
+                return;
+            }
+            if(vStack == 0){
+                this.aUI.println("0 is not a valid number.");
+            }
+            if(vStack < 0){
+                this.aUI.println("You cannot input a negative number.");
+            }
+        }else{
+            vStack = 1;
+        }
+        for(int i = 0 ; i < vStack ; i++){
+            if(this.aCurrentRoom.getPreviousRoom() != null){
+                this.updateLocation(this.aCurrentRoom.getPreviousRoom());
+            }else{
+                this.aUI.println("There is no room to go back to.");
+                return;
+            }
+        }
+    }   //back()
+    
     /**
      * Gets the Exits from the room you are currently in. (Also a Command).
      * Returns a String.
      */
     private void printLocationInfo(){
         this.aUI.println(aCurrentRoom.getLongDescription()); //Tells the player a Long description about the room they are in.
+        this.aUI.println(aCurrentRoom.getInventoryItemList()); //Gives the player a list of the item(s) inside the room's inventory.
     }   //printLocationInfo()
     
     /**
@@ -201,7 +254,7 @@ public class GameEngine
                 this.aUI.print("The command called \"" + vSecondWord.substring(0,1).toUpperCase() + vSecondWord.substring(1).toLowerCase() + "\" is for : ");
                 this.aUI.println(this.aParser.getCommandDescription(vSecondWord));
             }else{
-                this.aUI.println("" + pCommand.getSecondWord().substring(0,1).toUpperCase() + vSecondWord.substring(1).toLowerCase() + " is not an existing command.");
+                this.aUI.println("" + vSecondWord.substring(0,1).toUpperCase() + vSecondWord.substring(1).toLowerCase() + " is not an existing command.");
             }
         }else{
             System.out.println("Your command words are:");
@@ -275,6 +328,9 @@ public class GameEngine
                     return false;
                 case "use":
                     use();
+                    return false;
+                case "back":
+                    back(pCommand);
                     return false;
                 case "merp":
                     this.aUI.println("The Sergal goes Merp and the Cheese Wedge be Yellow !");

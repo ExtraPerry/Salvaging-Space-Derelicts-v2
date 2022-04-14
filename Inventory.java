@@ -30,10 +30,9 @@ public class Inventory
         return this.getItem(pItemName) != null;
     }
     
-    public void addItem(final String pItemName, final int pItemPrice){
-        Item vItem = new Item(pItemName, pItemPrice);
-        this.aItemList.add(vItem);
-        this.aTotalPrice += pItemPrice;
+    public void addItem(final Item pItem){
+        this.aItemList.add(pItem);
+        this.aTotalPrice += pItem.getPrice();
     }
     
     public void removeItem(final String pItemName){
@@ -46,5 +45,19 @@ public class Inventory
     @Override public String toString()
     {
         return "" + this.aItemList + " : " + this.aTotalPrice + "";
+    }
+    
+    /**
+     * Returns a simple list of all the Items Names in the inventory for use of Display.
+     */
+    public String getItemListString(){
+        String vOutput = "";
+        for(Item vElement : this.aItemList){
+            if(vOutput != ""){
+                vOutput += ", ";
+            }
+            vOutput += vElement.getName();
+        }
+        return vOutput;
     }
 }

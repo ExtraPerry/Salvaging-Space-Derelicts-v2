@@ -8,6 +8,7 @@ import java.awt.event.WindowEvent;
 import java.awt.event.WindowAdapter;
 
 import javax.swing.JTextField;
+import javax.swing.JButton;
 
 import javax.swing.JTextArea;
 import javax.swing.JScrollPane;
@@ -28,8 +29,9 @@ public class UserInterfaceController implements ActionListener
     private GameEngine aEngine;
     
     private JFrame aGameWindow;
-    private JTextArea aLog;
     private JTextField aEntryField;
+    private JButton aEnterButton;
+    private JTextArea aLog;
     private JLabel aImage;
     
     /**
@@ -58,6 +60,9 @@ public class UserInterfaceController implements ActionListener
         //Creates the entry bar in which the player will write text to initiate commands.
         this.aEntryField = new JTextField(32);//The int used to init the Field defines how many columbs it'll have.
         
+        //Creates the Button.
+        this.aEnterButton = new JButton("Enter");
+        
         //Creates the log of all commands used by the player.//
         this.aLog = new JTextArea(); //Create a text area that'll serve as a log of all previous commands the player has used.
         this.aLog.setEditable(false); //The text area should not be editable by the player. It is a read only component of the GUI.
@@ -69,22 +74,29 @@ public class UserInterfaceController implements ActionListener
         //Creates the alocated are for the image to be displayed in.
         this.aImage = new JLabel();
         
-        //Setup the custom panel layout.
+        //Sub-Sub-Panel (Setup the custom panel layout).
         JPanel vPanel1 = new JPanel(); //Creates a new panel. This will be a Sub-Panel.
         vPanel1.setLayout(new BorderLayout()); //NORTH,EAST ,SOUTH,WEST ,CENTER.
-        vPanel1.add(vScrollLog, BorderLayout.CENTER);  //Places the Scrollable Log in the center of the + layout configuration.
-        vPanel1.add(this.aEntryField, BorderLayout.SOUTH); //Places the  on the Bottom of the + layout configuration.
+        vPanel1.add(this.aEntryField, BorderLayout.CENTER); //Places the EntryField on the Bottom of the + layout configuration.
+        vPanel1.add(this.aEnterButton, BorderLayout.EAST); //Places the Button on the Right of the + layout configuration.
         
-        JPanel vPanel2 = new JPanel(); //Creates a new panel. This will be the Main-Panel.
-        vPanel2.setLayout(new BorderLayout()); //NORTH,EAST ,SOUTH,WEST ,CENTER.
-        vPanel2.add(vPanel1, BorderLayout.CENTER); //Places the Sub-Panel in the center of the + layout configuration.
-        vPanel2.add(this.aImage, BorderLayout.EAST); //Places the Image Display on the Right of the + layout configuration.
+        //Sub-Panel (Setup the custom panel layout).
+        JPanel vPanel2 = new JPanel(); //Creates a new panel. This will be a Sub-Panel.
+        vPanel2.add(vScrollLog, BorderLayout.CENTER);  //Places the Scrollable Log in the center of the + layout configuration.
+        vPanel2.add(vPanel1, BorderLayout.SOUTH); //Places the Sub-Sub-Panel on the Bottom of the + layout configuration.
+        
+        //Main-Panel (Setup the custom panel layout).
+        JPanel vPanel3 = new JPanel(); //Creates a new panel. This will be the Main-Panel.
+        vPanel3.setLayout(new BorderLayout()); //NORTH,EAST ,SOUTH,WEST ,CENTER.
+        vPanel3.add(vPanel2, BorderLayout.CENTER); //Places the Sub-Panel in the center of the + layout configuration.
+        vPanel3.add(this.aImage, BorderLayout.EAST); //Places the Image Display on the Right of the + layout configuration.
         
         //Add the custom panel layout to the main Frame.
-        this.aGameWindow.getContentPane().add(vPanel2, BorderLayout.CENTER); 
+        this.aGameWindow.getContentPane().add(vPanel3, BorderLayout.CENTER); 
         
         //Action Listeners
-        this.aEntryField.addActionListener(this); //Listens to any text sent in the Text Field.
+        this.aEntryField.addActionListener(this); //Listens for any text sent in the Text Field.
+        this.aEnterButton.addActionListener(this); //Listens for a Button Press.
         this.aGameWindow.addWindowListener(new WindowAdapter() { //Makes sure that if the window is closed it'll end the game instance. (Well the entire program . . .)
             /**
              * Command run when the event of closing the window is detected.
@@ -112,26 +124,21 @@ public class UserInterfaceController implements ActionListener
     }   //createGUI()
     
     /**
-     * Set's specified image to be displayed on the GUI.
-     */
-    public void setImage(final String pImageFilePath){
-        URL vImageURL = this.getClass().getClassLoader().getResource(pImageFilePath); //Turn String into a URL Path.
-        if(vImageURL != null){ //Check if path is valid (if invalid = null).
-            ImageIcon vImage = new ImageIcon(vImageURL); //Get image from URL path.
-            this.aImage.setIcon(vImage); //Set Image.
-            this.aGameWindow.pack(); //Auto-resize the components.
-        }else{
-            System.out.println("Error : Image not found ! (" + pImageFilePath + ")"); //Returns error message.
-        }
-    }   //setImage()
-    
-    /**
      * Function triggered by an Event that is detected by the ActionListener().
      */
     public void actionPerformed(final ActionEvent pEvent){
         //Action Performed once text is input from the TextField.
         //There is no need to check the type of event since the TextField only has one type (Text has been "Entered").
-        this.getInputTextAndProcess();
+        switch(pEvent.getActionCommand()){
+            case "Enter":
+                System.out.println("Action Performed ==> Enter Button was clicked OR [Enter] was entered in the TextField.");
+                this.getInputTextAndProcess();
+                break;
+            default:
+                System.out.println("Action Performed ==> Keyboard Enter key was pressed while TextField was selected.");
+                this.getInputTextAndProcess();
+                break;
+        }
     }   //actionPerformed()
     
     /**
@@ -167,4 +174,18 @@ public class UserInterfaceController implements ActionListener
             this.aEntryField.removeActionListener(this); //Stops the EntryField's Listener from reacting to any kind of input.
         }
     }   //enableTextField()
+    
+    /**
+     * Set's specified image to be displayed on the GUI.
+     */
+    public void setImage(final String pImageFilePath){
+        URL vImageURL = this.getClass().getClassLoader().getResource(pImageFilePath); //Turn String into a URL Path.
+        if(vImageURL != null){ //Check if path is valid (if invalid = null).
+            ImageIcon vImage = new ImageIcon(vImageURL); //Get image from URL path.
+            this.aImage.setIcon(vImage); //Set Image.
+            this.aGameWindow.pack(); //Auto-resize the components.
+        }else{
+            System.out.println("Error : Image not found ! (" + pImageFilePath + ")"); //Returns error message.
+        }
+    }   //setImage()
 }
