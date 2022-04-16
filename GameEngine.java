@@ -332,6 +332,9 @@ public class GameEngine
                 case "back":
                     back(pCommand);
                     return false;
+                case "test":
+                    test();
+                    return false;
                 case "merp":
                     this.aUI.println("The Sergal goes Merp and the Cheese Wedge be Yellow !");
                     return false;
@@ -340,6 +343,18 @@ public class GameEngine
         this.aUI.println("I don't know what you mean...");
         return false;
     }   //processCommand()
+    
+    /**
+     * Test command that'll use various commands to see if they work.
+     */
+    private void test(){
+        //Reset Player position to the start.
+        Room vStarterRoom = this.aGameRooms.get("Airlock");
+        this.updateLocation(vStarterRoom);
+        
+        //Start of the testing routine.
+        
+    }   //test()
     
     /**
      * Used to end the Game.

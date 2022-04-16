@@ -51,7 +51,7 @@ public class UserInterfaceController implements ActionListener
         this.aGameWindow = new JFrame("Salvaging Space Derelicts"); //Create the game window itself.
         
         //Creates the Icon of the application.//
-        URL vIconURL = this.getClass().getClassLoader().getResource("Images/ProgrammerArt/MerpOpen.png"); //Set the URL String of where the image is stored as a URL variable.
+        URL vIconURL = this.getClass().getClassLoader().getResource("Images/ProgrammerArt_640x360px/MerpOpen.png"); //Set the URL String of where the image is stored as a URL variable.
         if (vIconURL != null){
             ImageIcon vIcon = new ImageIcon(vIconURL); //Fetches the relavent file information as an IconImage.
             this.aGameWindow.setIconImage(vIcon.getImage()); //Change from the default icon to the wanted icon (game window). & Converts the IconImage into an Image.
@@ -188,4 +188,23 @@ public class UserInterfaceController implements ActionListener
             System.out.println("Error : Image not found ! (" + pImageFilePath + ")"); //Returns error message.
         }
     }   //setImage()
+    
+    /**
+     * 
+     */
+    public void insertTextInTextField(final String pText){
+        this.aEntryField.setActionCommand(pText);
+    }
+    
+    /**
+     * (For test program use).
+     * Used to Trigger the EnterButton to run a command line from the TextField.
+     */
+    public void enterButtonTriggerAction(){
+        ActionListener[] vEnterButtonActionListenerList = this.aEnterButton.getActionListeners();
+        ActionEvent vEvent = new ActionEvent(this.aEnterButton, 666, "Enter");
+        for(int i = 0 ; i < vEnterButtonActionListenerList.length ; i++){
+            vEnterButtonActionListenerList[i].actionPerformed(vEvent);
+        }
+    }
 }

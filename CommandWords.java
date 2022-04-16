@@ -29,6 +29,7 @@ public class CommandWords
         this.aValidCommands.put("look","Gives the player a description of the room, it's viable exits and items inside the room.");
         this.aValidCommands.put("use","Makes the player use an item.");
         this.aValidCommands.put("back","Makes the player return to the previous room they were in until there is no room to return to. You can add a number after the command to go back multiple times.");
+        this.aValidCommands.put("test","Used to test various components of the entire game and make sure they all work properly.");
         this.aValidCommands.put("merp","Easter Egg ig :D");
     } // CommandWords()
 
