@@ -6,27 +6,24 @@ import java.util.Set;
  */
 public class GameEngine
 {
-    private Room aCurrentRoom; //The room the player is currently in.
+    //Attributes.
+    private Player aActivePlayer; //The player that is currently being used.
     private Parser aParser; //Player inputs.
     private HashMap<String, Room> aGameRooms; //All Rooms in the game.
     private UserInterfaceController aUI; //GUI.
     
+    
+    //Constructors.
     /**
      * Builds the Object from "this" class.
      */
     public GameEngine(){
         this.createRooms();
+        this.setActivePlayer(new Player("Player 1", this.getRoomFromMemory("Airlock")));
         this.aParser = new Parser();
     }   //Game()
     
-    /**
-     * Assigns the UI to the game engine in order to let it return feedback to the player.
-     */
-    public void setUI(UserInterfaceController pUI){
-        this.aUI = pUI; //Sets UI.
-        this.printWelcome(); //Welcome message
-    }   //setUI()
-    
+    //Methode related to the constructor. (This one will define what the game layout is like).
     /**
      * Used to create all of the "Rooms" inside of the game.
      * Used at game startup and is the map in itself.
@@ -34,7 +31,7 @@ public class GameEngine
     private void createRooms(){
         //All rooms
         Room vAirlock = new Room("Airlock","Images/ProgrammerArt_640x360px/Airlock.png");
-        Room vStorage = new Room("Storage","Images/ProgrammerArt_640x360px/CargoBay.png");
+        Room vCargoBay = new Room("Cargo Bay","Images/ProgrammerArt_640x360px/CargoBay.png");
         Room vMainHall = new Room("Main Hall","Images/ProgrammerArt_640x360px/MainRoom.png");
         Room vSafe = new Room("Safe Room","Images/ProgrammerArt_640x360px/SafeRoom.png");
         Room vPilotDorm = new Room("Pilot Dorm","Images/ProgrammerArt_640x360px/PilotDorm.png");
@@ -55,13 +52,13 @@ public class GameEngine
         
         
         //Airlock Exits
-        vAirlock.setExit("south",vStorage);
+        vAirlock.setExit("south",vCargoBay);
         //Storage Exits
-        vStorage.setExit("above",vMainHall);
-        vStorage.setExit("north",vAirlock);
+        vCargoBay.setExit("above",vMainHall);
+        vCargoBay.setExit("north",vAirlock);
         //Main Hall Exits
         vMainHall.setExit("above",vObservationDome);
-        vMainHall.setExit("below",vStorage);
+        vMainHall.setExit("below",vCargoBay);
         vMainHall.setExit("north",vSafe);
         vMainHall.setExit("east",vCantine);
         vMainHall.setExit("south",vEngineering);
@@ -125,184 +122,76 @@ public class GameEngine
         
         //Storage Items.
         Item vDamagedCrate = new Item("Damaged Crate", 750, 1, "A Damaged Crate, it's contents seem to be destroyed but maybe you could sell it as scraps.");
-        vStorage.addItemToInventory(vDamagedCrate);
+        vCargoBay.addItemToInventory(vDamagedCrate);
         Item vIntactCrate = new Item("Intact Crate", 7500, 1, "An Intact Crate, you are unable to open it but even so it'll sell well.");
-        vStorage.addItemToInventory(vIntactCrate);
+        vCargoBay.addItemToInventory(vIntactCrate);
         
-        
-        this.aCurrentRoom = vAirlock;
         
         //Init the HashMap first.
         this.aGameRooms = new HashMap<String, Room>();
         //Adding the temporary rooms to a global attribute for later use.
-        this.aGameRooms.put(vAirlock.getDescription(),vAirlock);
-        this.aGameRooms.put(vStorage.getDescription(),vStorage);
-        this.aGameRooms.put(vMainHall.getDescription(),vMainHall);
-        this.aGameRooms.put(vSafe.getDescription(),vSafe);
-        this.aGameRooms.put(vPilotDorm.getDescription(),vPilotDorm);
-        this.aGameRooms.put(vBridge.getDescription(),vBridge);
-        this.aGameRooms.put(vEngineering.getDescription(),vEngineering);
-        this.aGameRooms.put(vReactor.getDescription(),vReactor);
-        this.aGameRooms.put(vEngine1.getDescription(),vEngine1);
-        this.aGameRooms.put(vEngine2.getDescription(),vEngine2);
-        this.aGameRooms.put(vEngine3.getDescription(),vEngine3);
-        this.aGameRooms.put(vEngine4.getDescription(),vEngine4);
-        this.aGameRooms.put(vDorms.getDescription(),vDorms);
-        this.aGameRooms.put(vMedical.getDescription(),vMedical);
-        this.aGameRooms.put(vSports.getDescription(),vSports);
-        this.aGameRooms.put(vCantine.getDescription(),vCantine);
-        this.aGameRooms.put(vKitching.getDescription(),vKitching);
-        this.aGameRooms.put(vScienceAndMonitoring.getDescription(),vScienceAndMonitoring);
-        this.aGameRooms.put(vObservationDome.getDescription(),vObservationDome);
+        this.aGameRooms.put(vAirlock.getName(),vAirlock);
+        this.aGameRooms.put(vCargoBay.getName(),vCargoBay);
+        this.aGameRooms.put(vMainHall.getName(),vMainHall);
+        this.aGameRooms.put(vSafe.getName(),vSafe);
+        this.aGameRooms.put(vPilotDorm.getName(),vPilotDorm);
+        this.aGameRooms.put(vBridge.getName(),vBridge);
+        this.aGameRooms.put(vEngineering.getName(),vEngineering);
+        this.aGameRooms.put(vReactor.getName(),vReactor);
+        this.aGameRooms.put(vEngine1.getName(),vEngine1);
+        this.aGameRooms.put(vEngine2.getName(),vEngine2);
+        this.aGameRooms.put(vEngine3.getName(),vEngine3);
+        this.aGameRooms.put(vEngine4.getName(),vEngine4);
+        this.aGameRooms.put(vDorms.getName(),vDorms);
+        this.aGameRooms.put(vMedical.getName(),vMedical);
+        this.aGameRooms.put(vSports.getName(),vSports);
+        this.aGameRooms.put(vCantine.getName(),vCantine);
+        this.aGameRooms.put(vKitching.getName(),vKitching);
+        this.aGameRooms.put(vScienceAndMonitoring.getName(),vScienceAndMonitoring);
+        this.aGameRooms.put(vObservationDome.getName(),vObservationDome);
     }   //createRooms()
     
+    
+    //Set Methodes. (Related to this Class)
     /**
-     * Sends the player to the next selected room by "Command"'s order.
-     * Param = Command.
-     * return = void.
+     * Used to change the active player in the game.
      */
-    private void goRoom(final Command pCommand){
-        if (!(pCommand.hasSecondWord())){ //Checks if the go command has a second word
-            this.aUI.println("Go where ?"); //If the go command has no second word asks the player where to go
-            return;
-        }
-        
-        Room vNextRoom = null; //Init the next room to be chosen
-        
-        vNextRoom = this.aCurrentRoom.getExit(pCommand.getSecondWord().toLowerCase()); //Get the room that the player wants to go to (null if direction is not available)
-        
-        if (vNextRoom == null){ //If direction is null then direction is Unknown
-            this.aUI.println("Unknown Direction"); //Tells the player that the direction is incorrect
-            return;
-        }
-        
-        vNextRoom.setPreviousRoom(this.aCurrentRoom); //Sets the previous room (current room at this moment in the code) the player was in right before going into the next room.
-        
-        this.updateLocation(vNextRoom);
-    }   //goRoom()
-
-    /**
-     * Updates the players position to the room sent in parameters.
-     */
-    private void updateLocation(final Room pNextRoom){
-        this.aCurrentRoom = pNextRoom; //Sends the player to the next room
-        this.aUI.setImage(this.aCurrentRoom.getImageFilePath()); //Changes the image to that of the next room.
-        this.printLocationInfo(); //Tells the player info about the next room
-    }   //updateLocation()
+    private void setActivePlayer(Player pActivePlayer){
+        this.aActivePlayer = pActivePlayer;
+    }   //setActivePlayer()
     
     /**
-     * Back command that will send the player to the previous room or rooms.
+     * Assigns the UI to the game engine in order to let it return feedback to the player.
      */
-    private void back(final Command pCommand){
-        int vStack;
-        if(pCommand.hasSecondWord()){
-            try{
-                vStack = Integer.parseInt(pCommand.getSecondWord());
-            }catch(NumberFormatException vException){
-                String vSecondWord = pCommand.getSecondWord();
-                this.aUI.println(vSecondWord.substring(0,1).toUpperCase() + vSecondWord.substring(1).toLowerCase() + " is not a number.");
-                return;
-            }
-            if(vStack == 0){
-                this.aUI.println("0 is not a valid number.");
-            }
-            if(vStack < 0){
-                this.aUI.println("You cannot input a negative number.");
-            }
-        }else{
-            vStack = 1;
-        }
-        for(int i = 0 ; i < vStack ; i++){
-            if(this.aCurrentRoom.getPreviousRoom() != null){
-                this.updateLocation(this.aCurrentRoom.getPreviousRoom());
-            }else{
-                this.aUI.println("There is no room to go back to.");
-                return;
-            }
-        }
-    }   //back()
+    public void setUI(UserInterfaceController pUI){
+        this.aUI = pUI; //Sets UI.
+        this.printWelcome(); //Welcome message
+    }   //setUI()
+    
+    
+    //Get Methodes. (Related to this Class)
+    /**
+     * Used to fetch the active player in the game.
+     */
+    private Player getActivePlayer(){
+        return this.aActivePlayer;
+    }   //getActivePlayer()
     
     /**
-     * Gets the Exits from the room you are currently in. (Also a Command).
-     * Returns a String.
+     * Used to Fetch a room stored in the game engin's memory (Hash Map).
      */
-    private void printLocationInfo(){
-        this.aUI.println(aCurrentRoom.getLongDescription()); //Tells the player a Long description about the room they are in.
-        this.aUI.println(aCurrentRoom.getInventoryItemList()); //Gives the player a list of the item(s) inside the room's inventory.
-    }   //printLocationInfo()
+    private Room getRoomFromMemory(final String pRoomName){
+        return this.aGameRooms.get(pRoomName);
+    }   //getRoomFromMemory()
     
-    /**
-     * Start Up message of the game.
-     */
-    private void printWelcome(){
-        this.aUI.println("Welcome to Salvaging Space Derelicts.");
-        this.aUI.println("");
-        this.aUI.println("As you fly though space looking for the next oportunity.");
-        this.aUI.println("A wreck shows up on your scanner.");
-        this.aUI.println("You jump on the occasion and enter the airlock starting your adventure.");
-        this.aUI.println("");
-        this.printLocationInfo();
-    }   //printWelcome()
-    
-    /**
-     * Help command. //Needs to be able to adapt to all the commands available :D
-     */
-    private void printHelp(final Command pCommand){
-        if(pCommand.hasSecondWord()){
-            String vSecondWord = pCommand.getSecondWord().toLowerCase();
-            if(this.aParser.getCommandDescription(pCommand.getSecondWord().toLowerCase()) != null){
-                this.aUI.print("The command called \"" + vSecondWord.substring(0,1).toUpperCase() + vSecondWord.substring(1).toLowerCase() + "\" is for : ");
-                this.aUI.println(this.aParser.getCommandDescription(vSecondWord));
-            }else{
-                this.aUI.println("" + vSecondWord.substring(0,1).toUpperCase() + vSecondWord.substring(1).toLowerCase() + " is not an existing command.");
-            }
-        }else{
-            System.out.println("Your command words are:");
-            String[] vValidCommandList = this.aParser.getValidCommands();
-            String vOutput = "";
-            for(int i=0 ; i<vValidCommandList.length ; i++){
-                if(vOutput != ""){
-                    vOutput += ", ";
-                }
-                vOutput += vValidCommandList[i];
-            }
-            this.aUI.println("" + vOutput + ".");
-        }
-    }   //printHelp()
-    
-    /**
-     * Quit command. Returns true (boolean) if the player wants to quit the game.
-     */
-    private boolean quit(final Command pCommand){
-        if (pCommand.hasSecondWord()){ //Checks if quit has a second word
-            this.aUI.println("Quit what ?"); //If quit has a second word ask what the player wants to quit.
-            return false; //Don't quit the game (return => false)
-        }
-        return true; //Quit the game (return => true)
-    }   //quit()
-    
-    /**
-     * Look command. Tells the player info on their current location.
-     */
-    private void look(){
-        this.printLocationInfo();
-    }   //look()
-    
-    /**
-     * Use command. Let's the player use an item.
-     */
-    private void use(){
-        this.aUI.println("You used an item called thin air GG !");
-    }   //use()
-    
+    //Custom Methodes. (Related to this Class)
     /**
      * Reads the text written by the player and translates it to a readable command format.
      * Then sends it to be processed and run if recongnised.
      */
     public void interpretUITextCommand(final String pText){
         this.aUI.println("> " + pText + ""); //Send to log the command that was read.
-        Command vCommand = this.aParser.getCommand(pText); //Translate Text into usable Command Words.
-        boolean vExitCondition = this.processCommand(vCommand); //Process the command words.
+        boolean vExitCondition = this.processCommand(this.aParser.getCommand(pText)); //Translate & Process the command words.
         if(vExitCondition){
             this.endGame();
         }
@@ -345,16 +234,148 @@ public class GameEngine
     }   //processCommand()
     
     /**
+     * Sends the player to the next selected room by "Command"'s order.
+     * Param = Command.
+     * return = void.
+     */
+    private void goRoom(final Command pCommand){
+        if (pCommand.hasSecondWord()){ //Checks if the go command has a second word
+            String vDirection = pCommand.getSecondWord().toLowerCase();
+            if(this.getActivePlayer().hasNextRoom(vDirection)){
+                this.aActivePlayer.moveToNextRoom(vDirection);
+                this.updateLocation();
+            }else{
+                this.aUI.println("Unknown Direction"); //Tells the player that the direction is incorrect.
+            }
+        }else{
+            this.aUI.println("Go where ?"); //If the go command has no second word asks the player where to go.
+        }
+    }   //goRoom()
+    
+    /**
+     * Help command. //Needs to be able to adapt to all the commands available :D
+     */
+    private void printHelp(final Command pCommand){
+        if(pCommand.hasSecondWord()){
+            String vSecondWord = pCommand.getSecondWord().toLowerCase();
+            if(this.aParser.getCommandDescription(pCommand.getSecondWord().toLowerCase()) != null){
+                this.aUI.print("The command called \"" + vSecondWord.substring(0,1).toUpperCase() + vSecondWord.substring(1).toLowerCase() + "\" is for : ");
+                this.aUI.println(this.aParser.getCommandDescription(vSecondWord));
+            }else{
+                this.aUI.println("" + vSecondWord.substring(0,1).toUpperCase() + vSecondWord.substring(1).toLowerCase() + " is not an existing command.");
+            }
+        }else{
+            this.aUI.println("Your command words are:");
+            String[] vValidCommandList = this.aParser.getValidCommands();
+            String vOutput = "";
+            for(int i=0 ; i<vValidCommandList.length ; i++){
+                if(vOutput != ""){
+                    vOutput += ", ";
+                }
+                vOutput += vValidCommandList[i];
+            }
+            this.aUI.println("" + vOutput + ".");
+        }
+    }   //printHelp()
+    
+    /**
+     * Quit command. Returns true (boolean) if the player wants to quit the game.
+     */
+    private boolean quit(final Command pCommand){
+        if (pCommand.hasSecondWord()){ //Checks if quit has a second word
+            this.aUI.println("Quit what ?"); //If quit has a second word ask what the player wants to quit.
+            return false; //Don't quit the game (return => false)
+        }
+        return true; //Quit the game (return => true)
+    }   //quit()
+    
+    /**
+     * Look command. Tells the player info on their current location.
+     */
+    private void look(){
+        this.printLocationInfo();
+    }   //look()
+    
+    /**
+     * Use command. Let's the player use an item.
+     */
+    private void use(){
+        this.aUI.println("You used an item called thin air GG !");
+    }   //use()
+    
+    /**
+     * Back command that will send the player to the previous room or rooms.
+     */
+    private void back(final Command pCommand){
+        int vStack;
+        if(pCommand.hasSecondWord()){
+            try{
+                vStack = Integer.parseInt(pCommand.getSecondWord());
+            }catch(NumberFormatException vException){
+                String vSecondWord = pCommand.getSecondWord();
+                this.aUI.println(vSecondWord.substring(0,1).toUpperCase() + vSecondWord.substring(1).toLowerCase() + " is not a number.");
+                return;
+            }
+            if(vStack == 0){
+                this.aUI.println("0 is not a valid number.");
+                return;
+            }
+            if(vStack < 0){
+                this.aUI.println("You cannot input a negative number.");
+                return;
+            }
+        }else{
+            vStack = 1;
+        }
+        if(this.getActivePlayer().hasPreviousRoom()){
+            this.aActivePlayer.moveToPreviousRoom(vStack);
+            this.updateLocation();
+        }else{
+            this.aUI.println("There are no rooms to go back to.");
+        }
+    }   //back()
+    
+    /**
      * Test command that'll use various commands to see if they work.
      */
     private void test(){
         //Reset Player position to the start.
         Room vStarterRoom = this.aGameRooms.get("Airlock");
-        this.updateLocation(vStarterRoom);
+    
+        this.updateLocation();
         
         //Start of the testing routine.
         
     }   //test()
+    
+    /**
+     * Updates the players position to the room sent in parameters.
+     */
+    private void updateLocation(){
+        this.aUI.setImage(this.getActivePlayer().getCurrentRoom().getImageFilePath());
+        this.printLocationInfo();
+    }   //updateLocation()
+    
+    /**
+     * Gets the Exits from the room you are currently in. (Also a Command).
+     * Returns a String.
+     */
+    private void printLocationInfo(){
+        this.aUI.println(this.getActivePlayer().getCurrentRoomDescription()); //Tells the player a Long description about the room they are in.
+    }   //printLocationInfo()
+
+    /**
+     * Start Up message of the game.
+     */
+    private void printWelcome(){
+        this.aUI.println("Welcome to Salvaging Space Derelicts.");
+        this.aUI.println("");
+        this.aUI.println("As you fly though space looking for the next oportunity.");
+        this.aUI.println("A wreck shows up on your scanner.");
+        this.aUI.println("You jump on the occasion and enter the airlock starting your adventure.");
+        this.aUI.println("");
+        this.updateLocation();
+    }   //printWelcome()
     
     /**
      * Used to end the Game.

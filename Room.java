@@ -2,70 +2,106 @@ import java.util.HashMap;
 import java.util.Set;
 
 /**
- * Room Class used to instanciate different rooms.
+ * The Room Class is used to create an instance (Object) of all rooms in the game.
+ * It is used to store & manage all related information about a room.
  */
 public class Room
 {
-    private String aDescription; //The description of the room (a.k.a it's name used when returning information to the player)
-    private HashMap<String, Room> aExits; //The rooms exits and thus the rooms it'll link to
-    private Inventory aRoomInventory; //Inventory of items that is contained inside of the room.
-    private String aImageURL; //Is meant to store the Image that'll represent the Room's file location.
+    //Attributes. 
+    private String aName;
+    private HashMap<String, Room> aExits;
+    private Inventory aInventory;
+    private String aImageUrlFilePath;
+    private Room aPreviousRoom;
     
-    private Room aPreviousRoom; //Used to store the previous Room you were in before entering this Room. (For use while the game is running).
     
+    //Constructors.
     /**
-     * Builds the Object from "this" class. 
-     * (Only taking in the description as the "Exits" must be "null" at first, but will also not set an Image for the Room).
-     */
-    public Room(final String pDescription, final String pImageURL){
-        this.aDescription = pDescription; //Set description
-        this.aExits = new HashMap<String, Room>(); //init the HashMap
-        this.aRoomInventory = new Inventory(); //Set up an empty inventory.
-        this.aImageURL = pImageURL; //Sets the ImageURL
-        this.aPreviousRoom = null;
+     * Set custom Name and Image. Exits is empty by default. Inventory is empty by default. Previous room is null by default.
+    */
+    public Room(final String pName, final String pImageUrlFilePath){
+        this.setName(pName); 
+        this.aExits = new HashMap<String, Room>(); //init the HashMap.
+        this.aInventory = new Inventory(); 
+        this.setImageUrlFilePath(pImageUrlFilePath); 
+        this.setPreviousRoom(null);
     }   //Room()
     
+    
+    //Set Methodes. (Related to this Class)
     /**
-     * Set's the previous room the player was in.
+     * Used to change the name of the room.
+     */
+    private void setName(final String pName){
+        this.aName = pName;
+    }   //setName()
+    
+    /**
+     * Used to set an Exit of this room.
+     */
+    public void setExit(final String pDirection, final Room pRoom){
+        this.aExits.put(pDirection, pRoom); 
+    }   //setExits()
+    
+    /**
+     * Used to change the image url file path of the room.
+     */
+    private void setImageUrlFilePath(final String pImageUrlFilePath){
+        this.aImageUrlFilePath = pImageUrlFilePath;
+    }   //setImageURL()
+    
+    /**
+     * Used to set the previous room this room was entered from.
      */
     public void setPreviousRoom(Room pPreviousRoom){
         this.aPreviousRoom = pPreviousRoom;
     }   //setPreviousRoom()
     
-    /**
-     * Returns the previous room the player was in before entering the current room.
-     */
-    public Room getPreviousRoom(){
-        return this.aPreviousRoom;
-    }   //getPreviousRoom()
     
+    //Get Methodes. (Related to this Class)
     /**
-     * Returns the Description of "this" Object (Room).
+     * Used to fetch the room's name.
      */
-    public String getDescription(){
-        return this.aDescription;
+    public String getName(){
+        return this.aName;
     }   //getDescription()
     
     /**
-     * Used to set the Exits of "this" Object (Room).
-     */
-    public void setExit(final String pDirection, final Room pRoom){
-        this.aExits.put(pDirection, pRoom); //Sets the rooms exit based on direction and the room it should link to
-    }   //setExits()
-    
-    /**
-     * Returns the wanted exit using a string in parameters.
+     * Used to fetch the next room based on the room's exit.
      */
     public Room getExit(final String pDirection){
         return this.aExits.get(pDirection);
     }   //getExit()
     
     /**
-     * Returns available exits of the room. (String)
+     * Used to fetch the room's image file path representing this room.
      */
-    public String getExitString(){
+    public String getImageFilePath(){
+        return this.aImageUrlFilePath;
+    }
+    
+    /**
+     * Used to fetch the previous room this room was entered from.
+     */
+    public Room getPreviousRoom(){
+        return this.aPreviousRoom;
+    }   //getPreviousRoom()
+    
+    
+    //Custom Methodes. (Related to this Class)
+    /**
+     * Used to create a long description of the room.
+     * (Name | Viable exit(s) | Inventory Description).
+     */
+    public String getDescription(){
+        return "You are at : " + this.getName() + " | " + this.getViableExitDescription() + "\n" + this.getInventoryDescription();
+    }   //getLongDescription()
+    
+    /**
+     * Used to create a String describing all viable exits of the room.
+     */
+    private String getViableExitDescription(){
         String vOutput = ""; //Init String
-        
         Set<String> keys = this.aExits.keySet(); //Get all keys from the HashMap
         for (String vExit : keys){ //"for" each key of the HashMap
             if (vOutput != ""){ //If the String is not empty then add a comma for the next word (i.e => word1 + " ," + word_etc)
@@ -73,47 +109,38 @@ public class Room
             }
             vOutput += vExit.substring(0,1).toUpperCase() + vExit.substring(1).toLowerCase(); //Adds the Exit direction to the String (formats it so that the first letter is upper case and the rest is lower case)
         }
-        
-        return vOutput + "."; //Returns the String
+        return "Viable paths are : " + vOutput + "."; //Returns the String
     }   //getExitString()
-
+    
+    
+    //Custom Methodes. (Related to Sub-Class ==> aInventory)
     /**
-     * Returns a long description of the Room.
+     * Used to fetch an Item (Object) from the player's inventory.
      */
-    public String getLongDescription(){
-        return "You are at : " + this.getDescription() + " | Viable paths are : " + this.getExitString();
-    }
+    public Item getItemFromInventory(final String pItemName){
+        return this.aInventory.getItem(pItemName);
+    }   //getItemFromInventory()
     
     /**
-     * Returns Item from the rooms inventory. Null if the Item doesn't exist.
-     */
-    public Item GetItemFromInventory(final String pItemName){
-        return this.aRoomInventory.getItem(pItemName);
-    }
-    
-    /**
-     * Checks if Item is inside the Room's Inventory.
-     */
-    public boolean HasItemInInventory(final String pItemName){
-        return this.aRoomInventory.hasItem(pItemName);
-    }
-    
-    /**
-     * Adds an Item into the Room's Inventory.
+     * Used to add an item to the player's inventory.
      */
     public void addItemToInventory(final Item pItem){
-        this.aRoomInventory.addItem(pItem);
-    }
+        this.aInventory.addItem(pItem);
+    }   //addItemToInventory()
     
     /**
-     * Removes an Item from the Room's Inventory.
+     * Used to remove an item from the player's inventory.
      */
     public void removeItemFromInventory(final String pItemName){
-        this.aRoomInventory.removeItem(pItemName);
-    }
+        this.aInventory.removeItem(pItemName);
+    }   //removeItemFromInventory()
     
-    public String getInventoryItemList(){
-        String vList = aRoomInventory.getItemListString();
+    /**
+     * Used to create a String describing all items inside of the room's inventory.
+     * Also adds total price value of room's inventory.
+     */
+    private String getInventoryDescription(){
+        String vList = aInventory.toString();
         if(vList != ""){
             String vOutput = "Item in Room : " + vList + ".";
             if(vList.contains(",")){
@@ -124,12 +151,5 @@ public class Room
         }else{
             return "There are no Items inside this Room.";
         }
-    }
-    
-    /**
-     * Return the File Path of the Rooms Image.
-     */
-    public String getImageFilePath(){
-        return this.aImageURL;
-    }
+    }   //getInventoryItemList()
 } // Room
