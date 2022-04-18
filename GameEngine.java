@@ -1,6 +1,11 @@
 import java.util.HashMap;
 import java.util.Set;
 
+import java.io.File;
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.FileNotFoundException;
+
 /**
  * The main game instance.
  */
@@ -117,13 +122,13 @@ public class GameEngine
         
         
         //Arilock Items.
-        Item vDigitalPad = new Item("DigiPad", 50, 1, "Digi Pad containing some basic information about the ship");
+        Item vDigitalPad = new Item("Digi_Pad", 50, 1, "Digi Pad containing some basic information about the ship");
         vAirlock.addItemToInventory(vDigitalPad);
         
         //Storage Items.
-        Item vDamagedCrate = new Item("DamagedCrate", 750, 1, "A Damaged Crate, it's contents seem to be destroyed but maybe you could sell it as scraps.");
+        Item vDamagedCrate = new Item("Damaged_Crate", 750, 1, "A Damaged Crate, it's contents seem to be destroyed but maybe you could sell it as scraps.");
         vCargoBay.addItemToInventory(vDamagedCrate);
-        Item vIntactCrate = new Item("IntactCrate", 7500, 1, "An Intact Crate, you are unable to open it but even so it'll sell well.");
+        Item vIntactCrate = new Item("Intact_Crate", 7500, 1, "An Intact Crate, you are unable to open it but even so it'll sell well.");
         vCargoBay.addItemToInventory(vIntactCrate);
         
         
@@ -231,7 +236,7 @@ public class GameEngine
                     inventory(pCommand);
                     return false;
                 case "test":
-                    test();
+                    test(pCommand);
                     return false;
                 case "merp":
                     this.aUI.println("The Sergal goes Merp and the Cheese Wedge be Yellow !");
@@ -413,14 +418,19 @@ public class GameEngine
     /**
      * Test command that'll use various commands to see if they work.
      */
-    private void test(){
-        //Reset Player position to the start.
-        Room vStarterRoom = this.aGameRooms.get("Airlock");
-    
-        this.updateLocation();
-        
-        //Start of the testing routine.
-        
+    private void test(final Command pCommand){
+        if(pCommand.hasSecondWord()){
+            File vFile;
+            String vSecondWord = pCommand.getSecondWord();
+            try{
+                BufferedReader vProgram = new BufferedReader(new FileReader(new File("TestProgramFiles/" + pCommand.getSecondWord())));
+            }catch(FileNotFoundException vException){
+                this.aUI.println("[" + vSecondWord + "] is not valid File.");
+                return;
+            }
+        }else{
+            this.aUI.println("Please indicate which file you wish to use. (Must be in the [TestProgramFiles] directory.");
+        }
     }   //test()
     
     /**

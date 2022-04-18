@@ -60,12 +60,10 @@ public class Inventory
      */
     public Item getItem(final String pItemName){
         for(Item vElement : this.aItemList){
-            System.out.println(pItemName + " <=> " + vElement.getName());
             if(vElement.getName().toLowerCase().equals(pItemName.toLowerCase())){
                 System.out.println("True");
                 return vElement;
             }
-            System.out.println("False");
         }
         return null;
     }   //getItem()
