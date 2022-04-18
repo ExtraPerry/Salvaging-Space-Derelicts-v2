@@ -110,7 +110,7 @@ public class UserInterfaceController implements ActionListener
              * Command run when the event of changing the window's size is detected.
              */
             public void componentResized(ComponentEvent pEvent) {
-                System.out.println("Window Event : Size Change");//This should be used to change the size of any none automaticaly scalable elements inside the Game Window. (ex: Images). 
+                System.out.println("Window Event [GUI] : Size Change");//This should be used to change the size of any none automaticaly scalable elements inside the Game Window. (ex: Images). 
             }
         });
         

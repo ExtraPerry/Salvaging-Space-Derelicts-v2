@@ -74,6 +74,13 @@ public class Room
     }   //getExit()
     
     /**
+     * Used to fetch the room's inventory.
+     */
+    private Inventory getInventory(){
+        return this.aInventory;
+    }   //getInventory()
+    
+    /**
      * Used to fetch the room's image file path representing this room.
      */
     public String getImageFilePath(){
@@ -122,6 +129,13 @@ public class Room
     }   //getItemFromInventory()
     
     /**
+     * Used to check if the room inventory has specified item in it.
+     */
+    public boolean hasItemInInventory(final String pItemName){
+        return this.getInventory().hasItem(pItemName);
+    }   //hasItemInInventory()
+    
+    /**
      * Used to add an item to the player's inventory.
      */
     public void addItemToInventory(final Item pItem){
@@ -131,8 +145,8 @@ public class Room
     /**
      * Used to remove an item from the player's inventory.
      */
-    public void removeItemFromInventory(final String pItemName){
-        this.aInventory.removeItem(pItemName);
+    public void removeItemFromInventory(final Item pItem){
+        this.aInventory.removeItem(pItem);
     }   //removeItemFromInventory()
     
     /**
@@ -152,4 +166,11 @@ public class Room
             return "There are no Items inside this Room.";
         }
     }   //getInventoryItemList()
+    
+    /**
+     * returns full listing description of all items inside the player's inventory with great detail.
+     */
+    public String getInventoryListDescription(){
+        return this.aInventory.getInventoryListDescription();
+    }   //getInventoryListDescription()
 } // Room

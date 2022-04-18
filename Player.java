@@ -72,6 +72,13 @@ public class Player
     }   //getCurrentRoom()
     
     /**
+     * Used to fetch the player's inventory.
+     */
+    private Inventory getInventory(){
+        return this.aInventory;
+    }   //getInventory()
+    
+    /**
      * Used to fetch the player's max volume (inventory capacity).
      */
     public int getMaxVolume(){
@@ -90,9 +97,9 @@ public class Player
     /**
      * Checks if the item put in parameters will fit in the player's inventory.
      */
-    public boolean enoughSpaceInInventoryFor(final Item pItem){
-        return (this.getMaxVolume() + pItem.getVolume()) <= this.getMaxVolume();
-    }   //enoughSpaceInInventory()
+    public boolean hasSpaceInInventoryFor(final Item pItem){
+        return (this.getInventory().getTotalVolume() + pItem.getVolume()) <= this.getMaxVolume();
+    }   //hasSpaceInInventory()
     
     /**
      * Used to move the player's current room.
@@ -161,14 +168,21 @@ public class Player
      * Used to fetch an Item (Object) from the player's inventory.
      */
     public Item getItemFromInventory(final String pItemName){
-        return this.aInventory.getItem(pItemName);
+        return this.getInventory().getItem(pItemName);
     }   //getItemFromInventory()
+    
+    /**
+     * Used to check if player's inventory has specified item in it.
+     */
+    public boolean hasItemInInventory(final String pItemName){
+        return this.getInventory().hasItem(pItemName);
+    }   //hasItemInInventory()
     
     /**
      * Used to add an item to the player's inventory.
      */
     public void addItemToInventory(final Item pItem){
-        if(this.enoughSpaceInInventoryFor(pItem)){
+        if(this.hasSpaceInInventoryFor(pItem)){
             this.aInventory.addItem(pItem);
         }
     }   //addItemToInventory()
@@ -176,8 +190,8 @@ public class Player
     /**
      * Used to remove an item from the player's inventory.
      */
-    public void removeItemFromInventory(final String pItemName){
-        this.aInventory.removeItem(pItemName);
+    public void removeItemFromInventory(final Item pItem){
+        this.aInventory.removeItem(pItem);
     }   //removeItemFromInventory()
     
     /**
@@ -193,4 +207,11 @@ public class Player
     public String getInventoryString(){
         return this.aInventory.toString();
     }
+    
+    /**
+     * returns full listing description of all items inside the player's inventory with great detail.
+     */
+    public String getInventoryListDescription(){
+        return this.aInventory.getInventoryListDescription();
+    }   //getInventoryListDescription()
 }

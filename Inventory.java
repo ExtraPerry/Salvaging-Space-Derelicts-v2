@@ -9,16 +9,18 @@ public class Inventory
     //Attributes
     private ArrayList<Item> aItemList;
     private int aTotalPrice;
+    private int aTotalVolume;
     
     
     //Constructors.
     /**
-     * Creates an Inventory Object. Item list is empty. Total price is set to 0.
+     * Creates an Inventory Object. Item list is empty. Total price is set to 0. Total volume is set to 0.
      */
     public Inventory()
     {
         this.aItemList = new ArrayList<Item>();
         this.setTotalPrice(0);
+        this.setTotalVolume(0);
     }   //Inventory()
     
     
@@ -27,8 +29,15 @@ public class Inventory
      * Used to change the total price of the inventory.
      */
     private void setTotalPrice(final int pTotalPrice){
-        this.aTotalPrice = 0;
+        this.aTotalPrice = pTotalPrice;
     }   //setTotalPrice()
+    
+    /**
+     * Used to change the total volume of the inventory.
+     */
+    private void setTotalVolume(final int pTotalVolume){
+        this.aTotalVolume = pTotalVolume;
+    }   //setTotalVolume()
     
     
     //Get Methodes. (Related to this Class)
@@ -40,13 +49,23 @@ public class Inventory
     }   //getTotalPrice()
     
     /**
+     * Used to fetch the total volume of the inventory.
+     */
+    public int getTotalVolume(){
+        return this.aTotalVolume;
+    }   //getTotalVolume()
+    
+    /**
      * Used to fetch an Item from the inventory.
      */
     public Item getItem(final String pItemName){
         for(Item vElement : this.aItemList){
-            if(vElement.getName() == pItemName){
+            System.out.println(pItemName + " <=> " + vElement.getName());
+            if(vElement.getName().toLowerCase().equals(pItemName.toLowerCase())){
+                System.out.println("True");
                 return vElement;
             }
+            System.out.println("False");
         }
         return null;
     }   //getItem()
@@ -56,7 +75,7 @@ public class Inventory
     /**
      * Used to check if the inventory has Item in the inventory.
      */
-    private boolean hasItem(final String pItemName){
+    public boolean hasItem(final String pItemName){
         return this.getItem(pItemName) != null;
     }   //hasItem()
     
@@ -66,16 +85,19 @@ public class Inventory
     public void addItem(final Item pItem){
         this.aItemList.add(pItem);
         this.setTotalPrice(this.getTotalPrice() + pItem.getPrice());
+        this.setTotalVolume(this.getTotalVolume() + pItem.getVolume());
     }   //addItem()
     
     /**
      * Used to remove an item from the inventory.
      */
-    public void removeItem(final String pItemName){
+    public void removeItem(final Item pItem){
+        String pItemName = pItem.getName();
         if(this.hasItem(pItemName)){
             this.setTotalPrice(this.getTotalPrice() - getItem(pItemName).getPrice());
+            this.setTotalVolume(this.getTotalVolume() - getItem(pItemName).getVolume());
+            this.aItemList.remove(pItem);
         }
-        this.aItemList.remove(pItemName);
     }   //removeItem()
     
     /**
@@ -92,6 +114,38 @@ public class Inventory
         return vOutput;
     }   //getItemListString()
     
+    /**
+     * Returns a table of all items inside the inventory.
+     */
+    private String[] getItemListTable(){
+        return this.getItemListString().split(", ");
+    }   //getItemListTable()
+    
+    /**
+     * Returns a detailed listing of all items inside of the inventory.
+     */
+    public String getInventoryListDescription(){
+        if(this.aItemList.isEmpty()){
+            return "- Inventory is Empty.";
+        }else{
+            String vOutput = "";
+            for(Item vElement : this.aItemList){
+                if(vOutput != ""){
+                    vOutput += "\n";
+                }
+                int vPrice = vElement.getPrice();
+                String vCred = "";
+                if(vPrice == 1){
+                    vCred = "credit";
+                }else{
+                    vCred = "credits";
+                }
+                vOutput += "- " + vElement.getName() + " : " + vPrice + " " + vCred + " | " + vElement.getVolume() + " L.";
+            }
+            return vOutput;
+        }
+    }   //getInventoryListDescription()
+    
     
     //Overrides. (Related to this Class)
     /**
@@ -99,12 +153,17 @@ public class Inventory
      */
     @Override public String toString()
     {
-        String vEndPart = "";
-        if(this.getTotalPrice() == 1){
-            vEndPart = " credit";
+        if(this.getItemListString() != ""){
+            String vEndPart = "";
+            if(this.getTotalPrice() == 1){
+                vEndPart = " credit";
+            }else{
+                vEndPart = " credits";
+            }
+            return "" + this.getItemListString() + " [" + this.getTotalPrice() + vEndPart + "]";
         }else{
-            vEndPart = " credits";
+            return "";
         }
-        return "" + this.getItemListString() + " : " + this.aTotalPrice + vEndPart;
+        
     }
 }

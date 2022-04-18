@@ -117,13 +117,13 @@ public class GameEngine
         
         
         //Arilock Items.
-        Item vDigitalPad = new Item("Digi Pad", 50, 1, "Digi Pad containing some basic information about the ship");
+        Item vDigitalPad = new Item("DigiPad", 50, 1, "Digi Pad containing some basic information about the ship");
         vAirlock.addItemToInventory(vDigitalPad);
         
         //Storage Items.
-        Item vDamagedCrate = new Item("Damaged Crate", 750, 1, "A Damaged Crate, it's contents seem to be destroyed but maybe you could sell it as scraps.");
+        Item vDamagedCrate = new Item("DamagedCrate", 750, 1, "A Damaged Crate, it's contents seem to be destroyed but maybe you could sell it as scraps.");
         vCargoBay.addItemToInventory(vDamagedCrate);
-        Item vIntactCrate = new Item("Intact Crate", 7500, 1, "An Intact Crate, you are unable to open it but even so it'll sell well.");
+        Item vIntactCrate = new Item("IntactCrate", 7500, 1, "An Intact Crate, you are unable to open it but even so it'll sell well.");
         vCargoBay.addItemToInventory(vIntactCrate);
         
         
@@ -221,6 +221,15 @@ public class GameEngine
                 case "back":
                     back(pCommand);
                     return false;
+                case "take":
+                    take(pCommand);
+                    return false;
+                case "drop":
+                    drop(pCommand);
+                    return false;
+                case "inventory":
+                    inventory(pCommand);
+                    return false;
                 case "test":
                     test();
                     return false;
@@ -259,10 +268,10 @@ public class GameEngine
         if(pCommand.hasSecondWord()){
             String vSecondWord = pCommand.getSecondWord().toLowerCase();
             if(this.aParser.getCommandDescription(pCommand.getSecondWord().toLowerCase()) != null){
-                this.aUI.print("The command called \"" + vSecondWord.substring(0,1).toUpperCase() + vSecondWord.substring(1).toLowerCase() + "\" is for : ");
+                this.aUI.print("The command called \"" + this.formatWord(vSecondWord) + "\" is for : ");
                 this.aUI.println(this.aParser.getCommandDescription(vSecondWord));
             }else{
-                this.aUI.println("" + vSecondWord.substring(0,1).toUpperCase() + vSecondWord.substring(1).toLowerCase() + " is not an existing command.");
+                this.aUI.println("" + this.formatWord(vSecondWord) + " is not an existing command.");
             }
         }else{
             this.aUI.println("Your command words are:");
@@ -313,7 +322,7 @@ public class GameEngine
                 vStack = Integer.parseInt(pCommand.getSecondWord());
             }catch(NumberFormatException vException){
                 String vSecondWord = pCommand.getSecondWord();
-                this.aUI.println(vSecondWord.substring(0,1).toUpperCase() + vSecondWord.substring(1).toLowerCase() + " is not a number.");
+                this.aUI.println(this.formatWord(vSecondWord) + " is not a number.");
                 return;
             }
             if(vStack == 0){
@@ -328,12 +337,78 @@ public class GameEngine
             vStack = 1;
         }
         if(this.getActivePlayer().hasPreviousRoom()){
-            this.aActivePlayer.moveToPreviousRoom(vStack);
+            this.getActivePlayer().moveToPreviousRoom(vStack);
             this.updateLocation();
         }else{
             this.aUI.println("There are no rooms to go back to.");
         }
     }   //back()
+    
+    /**
+     * Take command that will move an item from the room the player is in into the player's inventory.
+     */
+    private void take(final Command pCommand){
+        if(pCommand.hasSecondWord()){
+            String vItemNameCommand = pCommand.getSecondWord();
+            Room vCurrentRoom = this.getActivePlayer().getCurrentRoom();
+            if(vCurrentRoom.hasItemInInventory(vItemNameCommand)){
+                Item vItem = vCurrentRoom.getItemFromInventory(vItemNameCommand);
+                if(this.getActivePlayer().hasSpaceInInventoryFor(vItem)){
+                    this.getActivePlayer().getCurrentRoom().removeItemFromInventory(vItem);
+                    this.getActivePlayer().addItemToInventory(vItem);
+                    this.aUI.println("You've taken " + vItem.getName() + " from " + vCurrentRoom.getName());
+                }else{
+                    this.aUI.println("Not enough place in inventory to pick up " + vItem.getName() + ".");
+                }
+            }else{
+                this.aUI.println("Specified item (" + this.formatWord(vItemNameCommand) + ") cannot be found inside this room.");
+            }
+        }else{
+            this.aUI.println("Take what Item ?");
+        }
+    }   //take()
+    
+    /**
+     * Take command that will move an item from the room the player is in into the player's inventory.
+     */
+    private void drop(final Command pCommand){
+        if(pCommand.hasSecondWord()){
+            String vItemNameCommand = pCommand.getSecondWord();
+            if(this.getActivePlayer().hasItemInInventory(vItemNameCommand)){
+                Item vItem = this.getActivePlayer().getItemFromInventory(vItemNameCommand);
+                Room vCurrentRoom = this.getActivePlayer().getCurrentRoom();
+                this.getActivePlayer().removeItemFromInventory(vItem);
+                vCurrentRoom.addItemToInventory(vItem);
+                this.aUI.println("You've dropped " + vItem.getName() + " in " + vCurrentRoom.getName());
+            }else{
+                this.aUI.println("Specified item (" + this.formatWord(vItemNameCommand) + ") cannot be found inside player's inventory.");
+            }
+        }else{
+            this.aUI.println("Drop what Item ?");
+        }
+    }   //take()
+    
+    /**
+     * 
+     */
+    private void inventory(final Command pCommand){
+        if(pCommand.hasSecondWord()){
+            String vSecondWord = pCommand.getSecondWord().toLowerCase();
+            switch(vSecondWord){
+                case "player":
+                    this.aUI.println(this.getActivePlayer().getInventoryListDescription());
+                    break;
+                case "room":
+                    this.aUI.println(this.getActivePlayer().getCurrentRoom().getInventoryListDescription());
+                    break;
+                default:
+                    this.aUI.println(this.formatWord(vSecondWord) + " is not a valid inventory. [Player] or [Room]");
+                    break;
+            }
+        }else{
+            this.aUI.println("Which inventory ? [Player] or [Room]");
+        }
+    }
     
     /**
      * Test command that'll use various commands to see if they work.
@@ -355,6 +430,13 @@ public class GameEngine
         this.aUI.setImage(this.getActivePlayer().getCurrentRoom().getImageFilePath());
         this.printLocationInfo();
     }   //updateLocation()
+    
+    /**
+     * Used to capitalise the first letter of a word and put the rest to lower case.
+     */
+    private String formatWord(final String pWord){
+        return pWord.substring(0,1).toUpperCase() + pWord.substring(1).toLowerCase();
+    }   //formatWord()
     
     /**
      * Gets the Exits from the room you are currently in. (Also a Command).
