@@ -1,5 +1,6 @@
 import java.util.HashMap;
 import java.util.Set;
+import java.io.IOException;
 
 import java.io.File;
 import java.io.BufferedReader;
@@ -424,8 +425,17 @@ public class GameEngine
             String vSecondWord = pCommand.getSecondWord();
             try{
                 BufferedReader vProgram = new BufferedReader(new FileReader(new File("TestProgramFiles/" + pCommand.getSecondWord())));
+                String vLine = "";
+                try{
+                    while((vLine = vProgram.readLine()) != null){
+                        this.aUI.insertTextInTextField(vLine);
+                        this.aUI.enterButtonTriggerAction();
+                    }
+                }catch(IOException vException){
+                    this.aUI.println("Something went wrong while reading a line.");
+                }
             }catch(FileNotFoundException vException){
-                this.aUI.println("[" + vSecondWord + "] is not valid File.");
+                this.aUI.println("File [" + vSecondWord + "] is not valid.");
                 return;
             }
         }else{

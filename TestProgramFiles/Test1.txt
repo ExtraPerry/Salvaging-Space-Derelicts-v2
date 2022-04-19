@@ -1,0 +1,22 @@
+Inventory Player
+Inventory Room
+Take Digi_Pad
+Inventory Room
+Go South
+Inventory Player
+Inventory Room
+Take Damaged_Crate
+Inventory Room
+Take Intact_Crate
+Inventory Room
+Go Above
+Inventory Player
+Inventory Room
+Drop Damaged_Crate
+Inventory Room
+Go Above
+Inventory Player
+Quit
+
+
+
