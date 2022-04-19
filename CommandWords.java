@@ -2,14 +2,14 @@ import java.util.HashMap;
 import java.util.Set;
 
 /**
- * This class is part of the "World of Zuul" application. 
- * "World of Zuul" is a very simple, text based adventure game.  
+ * This class is part of the "Salvaging Space Derelicts" application. 
+ * Based off of "World of Zuul" which is a very simple, text based adventure game.  
  * 
- * This class holds an enumeration table of all command words known to the game.
- * It is used to recognise commands as they are typed in.
+ * This class holds an enumeration table of all command words known to the game and a description of the commands.
+ * It is used to recognise commands as they are typed in and get information about the command.
  *
- * @author  Michael Kolling and David J. Barnes + D.Bureau
- * @version 2008.03.30 + 2019.09.25
+ * @author  Michael Kolling and David J. Barnes + D.Bureau [Modified by P.Gervais]
+ * @version 2008.03.30 + 2019.09.25 [Modified]
  */
 public class CommandWords
 {

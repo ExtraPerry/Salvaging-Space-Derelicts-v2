@@ -23,6 +23,9 @@ import java.awt.BorderLayout;
 
 /**
  * GUI class designed for the player in order to interface with the game.
+ * 
+ * @author Gervaise Pierre
+ * @version Main Branch
  */
 public class UserInterfaceController implements ActionListener
 {
@@ -188,23 +191,4 @@ public class UserInterfaceController implements ActionListener
             System.out.println("Error : Image not found ! (" + pImageFilePath + ")"); //Returns error message.
         }
     }   //setImage()
-    
-    /**
-     * 
-     */
-    public void insertTextInTextField(final String pText){
-        this.aEntryField.setActionCommand(pText);
-    }
-    
-    /**
-     * (For test program use).
-     * Used to Trigger the EnterButton to run a command line from the TextField.
-     */
-    public void enterButtonTriggerAction(){
-        ActionListener[] vEnterButtonActionListenerList = this.aEnterButton.getActionListeners();
-        ActionEvent vEvent = new ActionEvent(this.aEnterButton, 666, "Enter");
-        for(int i = 0 ; i < vEnterButtonActionListenerList.length ; i++){
-            vEnterButtonActionListenerList[i].actionPerformed(vEvent);
-        }
-    }
 }

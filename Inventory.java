@@ -3,6 +3,9 @@ import java.util.ArrayList;
 /**
  * The Inventory Class is used to create an instance (Object) of an inventory.
  * It is used to store multiple Item Objects together and their total price.
+ * 
+ * @author Gervaise Pierre
+ * @version Main Branch
  */
 public class Inventory
 {

@@ -1,18 +1,21 @@
 
 /**
- * Write a description of class Item here.
+ * The Item Class is used to create an instance (Object) of an item.
+ * It is used to store information about an item such as it's name, price, volume and a description of it.
  *
- * @author (your name)
- * @version (a version number or a date)
+ * @author Gervaise Pierre
+ * @version Main Branch
  */
 public class Item
 {
+    //Attributes
     private String aName;
     private int aPrice;
     private int aVolume;
     private String aItemDescription;
     
     
+    //Constructors
     public Item(final String pName, final int pPrice, final int pVolume, final String pItemDescription)
     {
         this.aName = pName;
@@ -21,6 +24,8 @@ public class Item
         this.aVolume = pVolume;
     }
     
+    
+    //Get Methodes. (Related to this Class)
     public String getName(){
         return this.aName;
     }
@@ -37,6 +42,8 @@ public class Item
         return this.aItemDescription;
     }
     
+    
+    //Custom Methodes. (Related to this Class)
     public String getLongItemDescription(){
         String vOutput = this.getItemDescription() + "\n" + "Price: " + this.getPrice();
         if(this.aPrice == 1){

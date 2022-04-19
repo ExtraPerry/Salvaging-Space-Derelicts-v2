@@ -4,6 +4,9 @@ import java.util.Set;
 /**
  * The Room Class is used to create an instance (Object) of all rooms in the game.
  * It is used to store & manage all related information about a room.
+ * 
+ * @author Gervaise Pierre
+ * @version Main Branch
  */
 public class Room
 {

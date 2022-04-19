@@ -1,14 +1,18 @@
 import java.util.HashMap;
 import java.util.Set;
-import java.io.IOException;
 
 import java.io.File;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 
 /**
- * The main game instance.
+ * Central class that pipes information where it is needed from one class to another.
+ * It is also the class where all elements of the game are created.
+ * 
+ * @author Gervaise Pierre
+ * @version Main Branch
  */
 public class GameEngine
 {
@@ -428,8 +432,7 @@ public class GameEngine
                 String vLine = "";
                 try{
                     while((vLine = vProgram.readLine()) != null){
-                        this.aUI.insertTextInTextField(vLine);
-                        this.aUI.enterButtonTriggerAction();
+                        this.interpretUITextCommand(vLine);
                     }
                 }catch(IOException vException){
                     this.aUI.println("Something went wrong while reading a line.");

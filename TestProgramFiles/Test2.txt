@@ -1,0 +1,48 @@
+go south
+go above
+go above
+back
+go north
+go north
+go north
+back 2
+go west
+go south
+go south
+go east
+go north
+go east
+go south
+back
+go north
+back 2
+go south
+go below
+go south
+go above
+go west
+back
+go east
+back 5
+go below
+go north
+back
+back
+back
+back
+back
+back
+back
+back
+back
+back
+back
+back
+back
+back
+back
+back
+quit
+
+//Issue going back and forth into two rooms break the previous room memory :/
+//Ideal solution is to make a tempory file in witch I can save the order of rooms I went in. And delete that in sequential order backwards if I go backwards.

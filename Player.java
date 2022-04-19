@@ -1,6 +1,9 @@
 /**
  * The Player Class is used to create an instance (Object) of the player.
  * It is used to store & manage all related information about the player.
+ * 
+ * @author Gervaise Pierre
+ * @version Main Branch
  */
 public class Player
 {
