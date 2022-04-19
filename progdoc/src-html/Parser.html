@@ -1,0 +1,165 @@
+<!DOCTYPE HTML>
+<html lang="en">
+<head>
+<title>Source code</title>
+<link rel="stylesheet" type="text/css" href="../stylesheet.css" title="Style">
+</head>
+<body>
+<main role="main">
+<div class="sourceContainer">
+<pre><span class="sourceLineNo">001</span><a id="line.1">import java.util.StringTokenizer;</a>
+<span class="sourceLineNo">002</span><a id="line.2">import java.util.HashMap;</a>
+<span class="sourceLineNo">003</span><a id="line.3">import java.util.Set;</a>
+<span class="sourceLineNo">004</span><a id="line.4"></a>
+<span class="sourceLineNo">005</span><a id="line.5">/**</a>
+<span class="sourceLineNo">006</span><a id="line.6"> * This class is part of the "Salvaging Space Derelicts" application. </a>
+<span class="sourceLineNo">007</span><a id="line.7"> * Based off of "World of Zuul" which is a very simple, text based adventure game.</a>
+<span class="sourceLineNo">008</span><a id="line.8"> * </a>
+<span class="sourceLineNo">009</span><a id="line.9"> * This parser reads user input and tries to interpret it as an "Adventure"</a>
+<span class="sourceLineNo">010</span><a id="line.10"> * command. Every time it is called it reads a line from the terminal and</a>
+<span class="sourceLineNo">011</span><a id="line.11"> * tries to interpret the line as a two word command. It returns the command</a>
+<span class="sourceLineNo">012</span><a id="line.12"> * as an object of class Command.</a>
+<span class="sourceLineNo">013</span><a id="line.13"> *</a>
+<span class="sourceLineNo">014</span><a id="line.14"> * The parser has a set of known command words. It checks user input against</a>
+<span class="sourceLineNo">015</span><a id="line.15"> * the known commands, and if the input is not one of the known commands, it</a>
+<span class="sourceLineNo">016</span><a id="line.16"> * returns a command object that is marked as an unknown command.</a>
+<span class="sourceLineNo">017</span><a id="line.17"> * </a>
+<span class="sourceLineNo">018</span><a id="line.18"> * @author  Michael Kolling and David J. Barnes + D.Bureau [Modified by P.Gervais]</a>
+<span class="sourceLineNo">019</span><a id="line.19"> * @version 2008.03.30 + 2013.09.15 [Modified]</a>
+<span class="sourceLineNo">020</span><a id="line.20"> */</a>
+<span class="sourceLineNo">021</span><a id="line.21">public class Parser </a>
+<span class="sourceLineNo">022</span><a id="line.22">{</a>
+<span class="sourceLineNo">023</span><a id="line.23">    private CommandWords aValidCommands;  // (voir la classe CommandWords)</a>
+<span class="sourceLineNo">024</span><a id="line.24"></a>
+<span class="sourceLineNo">025</span><a id="line.25">    /**</a>
+<span class="sourceLineNo">026</span><a id="line.26">     * Constructeur par defaut qui cree les 2 objets prevus pour les attributs</a>
+<span class="sourceLineNo">027</span><a id="line.27">     */</a>
+<span class="sourceLineNo">028</span><a id="line.28">    public Parser() </a>
+<span class="sourceLineNo">029</span><a id="line.29">    {</a>
+<span class="sourceLineNo">030</span><a id="line.30">        this.aValidCommands = new CommandWords();</a>
+<span class="sourceLineNo">031</span><a id="line.31">        // System.in designe le clavier, comme System.out designe l'ecran</a>
+<span class="sourceLineNo">032</span><a id="line.32">    } // Parser()</a>
+<span class="sourceLineNo">033</span><a id="line.33"></a>
+<span class="sourceLineNo">034</span><a id="line.34">    /**</a>
+<span class="sourceLineNo">035</span><a id="line.35">     * @return The next command from the user.</a>
+<span class="sourceLineNo">036</span><a id="line.36">     */</a>
+<span class="sourceLineNo">037</span><a id="line.37">    public Command getCommand(final String pText) </a>
+<span class="sourceLineNo">038</span><a id="line.38">    {</a>
+<span class="sourceLineNo">039</span><a id="line.39">        String vWord1 = null;</a>
+<span class="sourceLineNo">040</span><a id="line.40">        String vWord2 = null;</a>
+<span class="sourceLineNo">041</span><a id="line.41">        </a>
+<span class="sourceLineNo">042</span><a id="line.42">        // cherche jusqu'a 2 mots dans la ligne tapee</a>
+<span class="sourceLineNo">043</span><a id="line.43">        StringTokenizer vTokenizer = new StringTokenizer(pText);</a>
+<span class="sourceLineNo">044</span><a id="line.44">        if(vTokenizer.hasMoreTokens()){ //Look if token has a word.</a>
+<span class="sourceLineNo">045</span><a id="line.45">            vWord1 = vTokenizer.nextToken(); //If token has a word then remember it and move to the next word.</a>
+<span class="sourceLineNo">046</span><a id="line.46">        }else{</a>
+<span class="sourceLineNo">047</span><a id="line.47">            vWord1 = null; //If token has no word then define it as null.</a>
+<span class="sourceLineNo">048</span><a id="line.48">        }</a>
+<span class="sourceLineNo">049</span><a id="line.49">        if(vTokenizer.hasMoreTokens()){ //Look if token has a second word.</a>
+<span class="sourceLineNo">050</span><a id="line.50">            vWord2 = vTokenizer.nextToken(); //If token has a second word then remember it and move to the next word. (However since we only want the first two words it doesn't matter if we go to the next word).</a>
+<span class="sourceLineNo">051</span><a id="line.51">        }else{</a>
+<span class="sourceLineNo">052</span><a id="line.52">            vWord2 = null; //If token has no word then define it as null.</a>
+<span class="sourceLineNo">053</span><a id="line.53">        }</a>
+<span class="sourceLineNo">054</span><a id="line.54">        </a>
+<span class="sourceLineNo">055</span><a id="line.55">        // Verifie si le premier mot est une commande connue.</a>
+<span class="sourceLineNo">056</span><a id="line.56">        // Si oui, cree un objet Command avec ce mot. (vWord2 peut etre null)</a>
+<span class="sourceLineNo">057</span><a id="line.57">        // Sinon, cree une commande vide avec "null" (pour dire 'commande inconnue').</a>
+<span class="sourceLineNo">058</span><a id="line.58">        if ( this.aValidCommands.isCommand( vWord1 ) ) {</a>
+<span class="sourceLineNo">059</span><a id="line.59">            return new Command( vWord1, vWord2 );</a>
+<span class="sourceLineNo">060</span><a id="line.60">        }</a>
+<span class="sourceLineNo">061</span><a id="line.61">        else {</a>
+<span class="sourceLineNo">062</span><a id="line.62">            return new Command( null, null ); </a>
+<span class="sourceLineNo">063</span><a id="line.63">        }</a>
+<span class="sourceLineNo">064</span><a id="line.64">    } // getCommand()</a>
+<span class="sourceLineNo">065</span><a id="line.65">    </a>
+<span class="sourceLineNo">066</span><a id="line.66">    /**</a>
+<span class="sourceLineNo">067</span><a id="line.67">     * Return the the list of valid commands in a single String.</a>
+<span class="sourceLineNo">068</span><a id="line.68">     */</a>
+<span class="sourceLineNo">069</span><a id="line.69">    public String[] getValidCommands()</a>
+<span class="sourceLineNo">070</span><a id="line.70">    {</a>
+<span class="sourceLineNo">071</span><a id="line.71">        String vTemp1 = ""; //Init String</a>
+<span class="sourceLineNo">072</span><a id="line.72">        </a>
+<span class="sourceLineNo">073</span><a id="line.73">        Set&lt;String&gt; keys = this.aValidCommands.getCommandHashMap().keySet(); //Get all keys from the HashMap</a>
+<span class="sourceLineNo">074</span><a id="line.74">        for (String vExit : keys){ //"for" each key of the HashMap</a>
+<span class="sourceLineNo">075</span><a id="line.75">            if (vTemp1 != ""){ //If the String is not empty then add a comma for the next word (i.e =&gt; word1 + " ," + word_etc)</a>
+<span class="sourceLineNo">076</span><a id="line.76">                vTemp1 += " "; //Adds the comma and spacing to the String</a>
+<span class="sourceLineNo">077</span><a id="line.77">            }</a>
+<span class="sourceLineNo">078</span><a id="line.78">            vTemp1 += vExit.substring(0,1).toUpperCase() + vExit.substring(1).toLowerCase(); //Adds the Command to the String (formats it so that the first letter is upper case and the rest is lower case)</a>
+<span class="sourceLineNo">079</span><a id="line.79">        }</a>
+<span class="sourceLineNo">080</span><a id="line.80">        String[] vOutput = vTemp1.split(" "); //Uses the String list of words to autmaticly split all the valid commands into a String Table.</a>
+<span class="sourceLineNo">081</span><a id="line.81">        //Instead of using a first loop to guess the size that the table needs to be just put it as a string with each command spaced with a (" ") then split it into a table.</a>
+<span class="sourceLineNo">082</span><a id="line.82">        return vOutput; //Returns the String Table.</a>
+<span class="sourceLineNo">083</span><a id="line.83">    }</a>
+<span class="sourceLineNo">084</span><a id="line.84">    </a>
+<span class="sourceLineNo">085</span><a id="line.85">    /**</a>
+<span class="sourceLineNo">086</span><a id="line.86">     * Fetches the available command's description from the command words class.</a>
+<span class="sourceLineNo">087</span><a id="line.87">     */</a>
+<span class="sourceLineNo">088</span><a id="line.88">    public String getCommandDescription(final String pCommandName){</a>
+<span class="sourceLineNo">089</span><a id="line.89">        return this.aValidCommands.getCommandInfo(pCommandName);</a>
+<span class="sourceLineNo">090</span><a id="line.90">    }</a>
+<span class="sourceLineNo">091</span><a id="line.91">} // Parser</a>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</pre>
+</div>
+</main>
+</body>
+</html>
