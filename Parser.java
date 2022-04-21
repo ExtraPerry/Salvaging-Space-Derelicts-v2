@@ -20,10 +20,14 @@ import java.util.Set;
  */
 public class Parser 
 {
+    //Attributes
     private CommandWords aValidCommands;  // (voir la classe CommandWords)
 
+    
+    //Contructors
     /**
      * Constructeur par defaut qui cree les 2 objets prevus pour les attributs
+     * @param None.
      */
     public Parser() 
     {
@@ -31,8 +35,12 @@ public class Parser
         // System.in designe le clavier, comme System.out designe l'ecran
     } // Parser()
 
+    
+    //Custom Methodes (Related to this Class)
     /**
      * @return The next command from the user.
+     * @param String : text that should be translated into a Command component.
+     * @return Command.
      */
     public Command getCommand(final String pText) 
     {
@@ -63,8 +71,12 @@ public class Parser
         }
     } // getCommand()
     
+    
+    //Custom Methodes. (Related to Sub-Class ==> aValidCommands)
     /**
      * Return the the list of valid commands in a single String.
+     * @param None.
+     * @return String[] : table of all valid commands.
      */
     public String[] getValidCommands()
     {
@@ -84,6 +96,8 @@ public class Parser
     
     /**
      * Fetches the available command's description from the command words class.
+     * @param String : Specified command word.
+     * @return String : Description of the specified command word.
      */
     public String getCommandDescription(final String pCommandName){
         return this.aValidCommands.getCommandInfo(pCommandName);

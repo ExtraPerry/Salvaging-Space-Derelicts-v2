@@ -13,11 +13,14 @@ import java.util.Set;
  */
 public class CommandWords
 {
-    // a constant array that will hold all valid command words
+    //Attributes.
     private HashMap<String, String> aValidCommands;
 
+    
+    //Constructors.
     /**
      * Constructor - initialise the command words.
+     * @param None.
      */
     public CommandWords()
     {
@@ -36,14 +39,44 @@ public class CommandWords
         this.addValidCommand("merp","Easter Egg ig :D");
     } // CommandWords()
 
+    
+    //Methode related to the constructor. (Will decide what commands are added in the permissions list and their description.
+    /**
+     * Used to add a command to the permitted list and give it a description.
+     * @param String : Word that will be the command, String : Description of the command that is added.
+     * @return void.
+     */
     private void addValidCommand(final String pWord, final String pDescription){
         this.aValidCommands.put(pWord, pDescription);
     }
     
+    
+    //Get Methode (Related to this Class).
+    /**
+     * Returns information on the command put in parameters.
+     * @param String : The command in question.
+     * @return String : Description of the command.
+     */
+    public String getCommandInfo(final String pCommandIndexName){
+        return this.aValidCommands.get(pCommandIndexName);
+    }
+    
+    /**
+     * Returns a list of all available commands. (String)
+     * @param None.
+     * @return HashMap : Full HashMap of all the commands and their descripti.
+     */
+    public HashMap getCommandHashMap()
+    {
+        return this.aValidCommands;
+    }
+    
+    
+    //Custom Methode (Related to this Class).
     /**
      * Check whether a given String is a valid command word. 
-     * @return true if a given string is a valid command,
-     * false if it isn't.
+     * @param String.
+     * @return boolean : true if a given string is a valid command, false if it isn't.
      */
     public boolean isCommand( final String pString )
     {
@@ -56,19 +89,4 @@ public class CommandWords
         // if we get here, the string was not found in the commands :
         return false;
     } // isCommand()
-    
-    /**
-     * Returns a list of all available commands. (String)
-     */
-    public HashMap getCommandHashMap()
-    {
-        return this.aValidCommands;
-    }
-    
-    /**
-     * Returns information on the command put in parameters.
-     */
-    public String getCommandInfo(final String pCommandIndexName){
-        return this.aValidCommands.get(pCommandIndexName);
-    }
 } // CommandWords

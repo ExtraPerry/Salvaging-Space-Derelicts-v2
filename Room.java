@@ -21,6 +21,7 @@ public class Room
     //Constructors.
     /**
      * Set custom Name and Image. Exits is empty by default. Inventory is empty by default. Previous room is null by default.
+     * @param String : Name of the room, String : Image URL path meant to represent the room (can be set to null if there are no images for the room).
     */
     public Room(final String pName, final String pImageUrlFilePath){
         this.setName(pName); 
@@ -34,6 +35,8 @@ public class Room
     //Set Methodes. (Related to this Class)
     /**
      * Used to change the name of the room.
+     * @param String : Name of the room.
+     * @return void.
      */
     private void setName(final String pName){
         this.aName = pName;
@@ -41,6 +44,8 @@ public class Room
     
     /**
      * Used to set an Exit of this room.
+     * @param String : Direction in which the exit will be, Room : The room in which the exit will lead.
+     * @return void.
      */
     public void setExit(final String pDirection, final Room pRoom){
         this.aExits.put(pDirection, pRoom); 
@@ -48,6 +53,8 @@ public class Room
     
     /**
      * Used to change the image url file path of the room.
+     * @param String : Image URL path meant to represent the room (can be set to null if there are no images for the room).
+     * @return void.
      */
     private void setImageUrlFilePath(final String pImageUrlFilePath){
         this.aImageUrlFilePath = pImageUrlFilePath;
@@ -55,6 +62,8 @@ public class Room
     
     /**
      * Used to set the previous room this room was entered from.
+     * @param Room : Room from which the player came from while going into this room.
+     * @return void.
      */
     public void setPreviousRoom(Room pPreviousRoom){
         this.aPreviousRoom = pPreviousRoom;
@@ -64,6 +73,8 @@ public class Room
     //Get Methodes. (Related to this Class)
     /**
      * Used to fetch the room's name.
+     * @param None.
+     * @return String : The name of the room.
      */
     public String getName(){
         return this.aName;
@@ -71,6 +82,8 @@ public class Room
     
     /**
      * Used to fetch the next room based on the room's exit.
+     * @param String : Direction of the exit.
+     * @return Room : Room to which the exit leads to (null means the specified direction has no exit).
      */
     public Room getExit(final String pDirection){
         return this.aExits.get(pDirection);
@@ -78,6 +91,8 @@ public class Room
     
     /**
      * Used to fetch the room's inventory.
+     * @param None.
+     * @return Inventory : Inventory of the room.
      */
     private Inventory getInventory(){
         return this.aInventory;
@@ -85,6 +100,8 @@ public class Room
     
     /**
      * Used to fetch the room's image file path representing this room.
+     * @param None.
+     * @return String : Image URL path meant to represent the room (if null then there are no images for the room)..
      */
     public String getImageFilePath(){
         return this.aImageUrlFilePath;
@@ -92,6 +109,8 @@ public class Room
     
     /**
      * Used to fetch the previous room this room was entered from.
+     * @param None.
+     * @return Room : The room from which the player came from while entering this room.
      */
     public Room getPreviousRoom(){
         return this.aPreviousRoom;
@@ -101,7 +120,8 @@ public class Room
     //Custom Methodes. (Related to this Class)
     /**
      * Used to create a long description of the room.
-     * (Name | Viable exit(s) | Inventory Description).
+     * @param None.
+     * @return String : Description of this room (Name | Viable exit(s) | Inventory Description).
      */
     public String getDescription(){
         return "You are at : " + this.getName() + " | " + this.getViableExitDescription() + "\n" + this.getInventoryDescription();
@@ -109,6 +129,8 @@ public class Room
     
     /**
      * Used to create a String describing all viable exits of the room.
+     * @param None.
+     * @return String : All viable exits that the room has.
      */
     private String getViableExitDescription(){
         String vOutput = ""; //Init String
@@ -126,6 +148,8 @@ public class Room
     //Custom Methodes. (Related to Sub-Class ==> aInventory)
     /**
      * Used to fetch an Item (Object) from the player's inventory.
+     * @param String : Name of the item.
+     * @return Item : Specified item.
      */
     public Item getItemFromInventory(final String pItemName){
         return this.aInventory.getItem(pItemName);
@@ -133,6 +157,8 @@ public class Room
     
     /**
      * Used to check if the room inventory has specified item in it.
+     * @param String : Name of the item.
+     * @return boolean : true if room's inventory has the specified item else false.
      */
     public boolean hasItemInInventory(final String pItemName){
         return this.getInventory().hasItem(pItemName);
@@ -140,6 +166,8 @@ public class Room
     
     /**
      * Used to add an item to the player's inventory.
+     * @param Item : Item that should be added to the room's inventory.
+     * @return void.
      */
     public void addItemToInventory(final Item pItem){
         this.aInventory.addItem(pItem);
@@ -147,6 +175,8 @@ public class Room
     
     /**
      * Used to remove an item from the player's inventory.
+     * @param Item : Item that should be removed from the room's inventory.
+     * @return void.
      */
     public void removeItemFromInventory(final Item pItem){
         this.aInventory.removeItem(pItem);
@@ -155,6 +185,8 @@ public class Room
     /**
      * Used to create a String describing all items inside of the room's inventory.
      * Also adds total price value of room's inventory.
+     * @param None.
+     * @return String : Description of the room's inventory.
      */
     private String getInventoryDescription(){
         String vList = aInventory.toString();
@@ -172,6 +204,8 @@ public class Room
     
     /**
      * returns full listing description of all items inside the player's inventory with great detail.
+     * @param None.
+     * @return String : Detailed list of all items in the room's inventory.
      */
     public String getInventoryListDescription(){
         return this.aInventory.getInventoryListDescription();

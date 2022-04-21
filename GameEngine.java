@@ -2,10 +2,8 @@ import java.util.HashMap;
 import java.util.Set;
 
 import java.io.File;
-import java.io.BufferedReader;
-import java.io.FileReader;
+import java.util.Scanner;
 import java.io.FileNotFoundException;
-import java.io.IOException;
 
 /**
  * Central class that pipes information where it is needed from one class to another.
@@ -26,6 +24,7 @@ public class GameEngine
     //Constructors.
     /**
      * Builds the Object from "this" class.
+     * @param None.
      */
     public GameEngine(){
         this.createRooms();
@@ -37,6 +36,8 @@ public class GameEngine
     /**
      * Used to create all of the "Rooms" inside of the game.
      * Used at game startup and is the map in itself.
+     * @param None.
+     * @return void.
      */
     private void createRooms(){
         //All rooms
@@ -165,6 +166,8 @@ public class GameEngine
     //Set Methodes. (Related to this Class)
     /**
      * Used to change the active player in the game.
+     * @param Player : The player that should be affected to this game.
+     * @return void.
      */
     private void setActivePlayer(Player pActivePlayer){
         this.aActivePlayer = pActivePlayer;
@@ -172,6 +175,8 @@ public class GameEngine
     
     /**
      * Assigns the UI to the game engine in order to let it return feedback to the player.
+     * @param UserInterfaceController : The ui to which the game engine should refer to.
+     * @return void.
      */
     public void setUI(UserInterfaceController pUI){
         this.aUI = pUI; //Sets UI.
@@ -182,6 +187,8 @@ public class GameEngine
     //Get Methodes. (Related to this Class)
     /**
      * Used to fetch the active player in the game.
+     * @param None.
+     * @return Player : The player currently affected by this game.
      */
     private Player getActivePlayer(){
         return this.aActivePlayer;
@@ -189,6 +196,8 @@ public class GameEngine
     
     /**
      * Used to Fetch a room stored in the game engin's memory (Hash Map).
+     * @param String : Name of the room.
+     * @return Room : Specified room from the game engine's pool of all rooms.
      */
     private Room getRoomFromMemory(final String pRoomName){
         return this.aGameRooms.get(pRoomName);
@@ -198,6 +207,8 @@ public class GameEngine
     /**
      * Reads the text written by the player and translates it to a readable command format.
      * Then sends it to be processed and run if recongnised.
+     * @param String : Text input that should be used to tell the game what to do (commands).
+     * @return void.
      */
     public void interpretUITextCommand(final String pText){
         this.aUI.println("> " + pText + ""); //Send to log the command that was read.
@@ -210,6 +221,8 @@ public class GameEngine
     /**
      * Command manager used after the commands are filtered through the Parser class.
      * Returns true (boolean) if the player wants to quit the game. In other words to end the instance.
+     * @param Command : Command component that should be processed to decide what command to run.
+     * @return boolean : true if the game engine should end the game on the user's demand else false.
      */
     private boolean processCommand(final Command pCommand){
         if (pCommand.getCommandWord() != null){
@@ -254,8 +267,8 @@ public class GameEngine
     
     /**
      * Sends the player to the next selected room by "Command"'s order.
-     * Param = Command.
-     * return = void.
+     * @param Command : Command component to better specifie what this command should do.
+     * @return void.
      */
     private void goRoom(final Command pCommand){
         if (pCommand.hasSecondWord()){ //Checks if the go command has a second word
@@ -272,7 +285,9 @@ public class GameEngine
     }   //goRoom()
     
     /**
-     * Help command. //Needs to be able to adapt to all the commands available :D
+     * Help command. Can also explain commands in more detail when specifying a command.
+     * @param Command : Command component to better specifie what this command should do.
+     * @return void.
      */
     private void printHelp(final Command pCommand){
         if(pCommand.hasSecondWord()){
@@ -299,6 +314,8 @@ public class GameEngine
     
     /**
      * Quit command. Returns true (boolean) if the player wants to quit the game.
+     * @param Command : Command component to better specifie what this command should do.
+     * @return boolean : true if the game engine should end the game on the user's demand else false.
      */
     private boolean quit(final Command pCommand){
         if (pCommand.hasSecondWord()){ //Checks if quit has a second word
@@ -310,6 +327,8 @@ public class GameEngine
     
     /**
      * Look command. Tells the player info on their current location.
+     * @param None.
+     * @return void.
      */
     private void look(){
         this.printLocationInfo();
@@ -317,6 +336,8 @@ public class GameEngine
     
     /**
      * Use command. Let's the player use an item.
+     * @param None.
+     * @return void.
      */
     private void use(){
         this.aUI.println("You used an item called thin air GG !");
@@ -324,6 +345,8 @@ public class GameEngine
     
     /**
      * Back command that will send the player to the previous room or rooms.
+     * @param Command : Command component to better specifie what this command should do.
+     * @return void.
      */
     private void back(final Command pCommand){
         int vStack;
@@ -356,6 +379,8 @@ public class GameEngine
     
     /**
      * Take command that will move an item from the room the player is in into the player's inventory.
+     * @param Command : Command component to better specifie what this command should do.
+     * @return void.
      */
     private void take(final Command pCommand){
         if(pCommand.hasSecondWord()){
@@ -380,6 +405,8 @@ public class GameEngine
     
     /**
      * Take command that will move an item from the room the player is in into the player's inventory.
+     * @param Command : Command component to better specifie what this command should do.
+     * @return void.
      */
     private void drop(final Command pCommand){
         if(pCommand.hasSecondWord()){
@@ -399,7 +426,9 @@ public class GameEngine
     }   //take()
     
     /**
-     * 
+     * Gives the player a detailed list of the specified inventory (Player or Room).
+     * @param Command : Command component to better specifie what this command should do.
+     * @return void.
      */
     private void inventory(final Command pCommand){
         if(pCommand.hasSecondWord()){
@@ -422,24 +451,19 @@ public class GameEngine
     
     /**
      * Test command that'll use various commands to see if they work.
+     * @param Command : Command component to better specifie what this command should do.
+     * @return void.
      */
     private void test(final Command pCommand){
         if(pCommand.hasSecondWord()){
-            File vFile;
             String vSecondWord = pCommand.getSecondWord();
             try{
-                BufferedReader vProgram = new BufferedReader(new FileReader(new File("TestProgramFiles/" + pCommand.getSecondWord())));
-                String vLine = "";
-                try{
-                    while((vLine = vProgram.readLine()) != null){
-                        this.interpretUITextCommand(vLine);
-                    }
-                }catch(IOException vException){
-                    this.aUI.println("Something went wrong while reading a line.");
+                Scanner vScan = new Scanner(new File("TestProgramFiles/" + pCommand.getSecondWord()));
+                while(vScan.hasNextLine()){
+                    this.interpretUITextCommand(vScan.nextLine());
                 }
             }catch(FileNotFoundException vException){
                 this.aUI.println("File [" + vSecondWord + "] is not valid.");
-                return;
             }
         }else{
             this.aUI.println("Please indicate which file you wish to use. (Must be in the [TestProgramFiles] directory.");
@@ -448,6 +472,8 @@ public class GameEngine
     
     /**
      * Updates the players position to the room sent in parameters.
+     * @param None.
+     * @return void.
      */
     private void updateLocation(){
         this.aUI.setImage(this.getActivePlayer().getCurrentRoom().getImageFilePath());
@@ -456,14 +482,17 @@ public class GameEngine
     
     /**
      * Used to capitalise the first letter of a word and put the rest to lower case.
+     * @param String : Input text that should be processed.
+     * @return String : Output text that has been processed.
      */
     private String formatWord(final String pWord){
         return pWord.substring(0,1).toUpperCase() + pWord.substring(1).toLowerCase();
     }   //formatWord()
     
     /**
-     * Gets the Exits from the room you are currently in. (Also a Command).
-     * Returns a String.
+     * Gets the Exits from the room you are currently in.
+     * @param None.
+     * return void.
      */
     private void printLocationInfo(){
         this.aUI.println(this.getActivePlayer().getCurrentRoomDescription()); //Tells the player a Long description about the room they are in.
@@ -471,6 +500,8 @@ public class GameEngine
 
     /**
      * Start Up message of the game.
+     * @param None.
+     * @return void.
      */
     private void printWelcome(){
         this.aUI.println("Welcome to Salvaging Space Derelicts.");
@@ -484,6 +515,8 @@ public class GameEngine
     
     /**
      * Used to end the Game.
+     * @param None.
+     * @return void.
      */
     private void endGame(){
         this.aUI.println("The End");

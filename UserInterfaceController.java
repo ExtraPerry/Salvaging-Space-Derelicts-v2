@@ -39,6 +39,7 @@ public class UserInterfaceController implements ActionListener
     
     /**
      * Constructor for the GUI.
+     * @param GameEngine : The game engine to which the ui should refer to.
      */
     public UserInterfaceController( final GameEngine pEngine)
     {
@@ -48,6 +49,8 @@ public class UserInterfaceController implements ActionListener
     
     /**
      * Function used to initialise the GUI.
+     * @parma None.
+     * @return void.
      */
     private void createGUI(){
         //Creates the Application Window.//
@@ -103,6 +106,8 @@ public class UserInterfaceController implements ActionListener
         this.aGameWindow.addWindowListener(new WindowAdapter() { //Makes sure that if the window is closed it'll end the game instance. (Well the entire program . . .)
             /**
              * Command run when the event of closing the window is detected.
+             * @param WindowEvent : Data on the event that happened.
+             * @return void.
              */
             public void windowClosing(WindowEvent pEvent) { //Sub function withing the WindowListener that'll wait for the exception of the window being closed.
                 System.exit(0); //The result of this trigger being activated will Exit the program (exit:0).
@@ -111,6 +116,8 @@ public class UserInterfaceController implements ActionListener
         this.aGameWindow.addComponentListener(new ComponentAdapter() {
             /**
              * Command run when the event of changing the window's size is detected.
+             * @param ComponentEvent : Data on the event that happened.
+             * @return void.
              */
             public void componentResized(ComponentEvent pEvent) {
                 System.out.println("Window Event [GUI] : Size Change");//This should be used to change the size of any none automaticaly scalable elements inside the Game Window. (ex: Images). 
@@ -128,6 +135,8 @@ public class UserInterfaceController implements ActionListener
     
     /**
      * Function triggered by an Event that is detected by the ActionListener().
+     * @param ActionEvent : Data on the event that happened.
+     * @return void.
      */
     public void actionPerformed(final ActionEvent pEvent){
         //Action Performed once text is input from the TextField.
@@ -146,6 +155,8 @@ public class UserInterfaceController implements ActionListener
     
     /**
      * Retrives the entered Text and sends it to the GameEngine to be processed.
+     * @param None.
+     * @return void.
      */
     private void getInputTextAndProcess(){
         String vText = this.aEntryField.getText(); //Saves the Text written inside the TextField.
@@ -155,6 +166,8 @@ public class UserInterfaceController implements ActionListener
     
     /**
      * Prints specified Text to the GUI's log.
+     * @param String : Text that should be displayed on the ui.
+     * @return void.
      */
     public void print(final String pText){
         this.aLog.append(pText); //Add Text to the Log.
@@ -162,6 +175,8 @@ public class UserInterfaceController implements ActionListener
     }   //print()
     /**
      * Prints specified Text to the GUI's log, but also goes to the next line after.
+     * @parma String : Text that should be displayed on the ui.
+     * @return void.
      */
     public void println(final String pText){
         this.print("" + pText + "\n"); //Calls the print function, but adds a skip to next line at the end.
@@ -169,6 +184,8 @@ public class UserInterfaceController implements ActionListener
     
     /**
      * Enables or Disables the GUI's TextField.
+     * @param boolean : true means that the text field is interactable else it is not interactable by the user.
+     * @return void.
      */
     public void enableTextField(final boolean pTrueFalse){
         this.aEntryField.setEditable(pTrueFalse); //Makes the TextField editable or not by the User.
@@ -180,6 +197,8 @@ public class UserInterfaceController implements ActionListener
     
     /**
      * Set's specified image to be displayed on the GUI.
+     * @param String : Image URL path that should be displayed on the ui.
+     * @return void.
      */
     public void setImage(final String pImageFilePath){
         URL vImageURL = this.getClass().getClassLoader().getResource(pImageFilePath); //Turn String into a URL Path.

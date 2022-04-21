@@ -18,6 +18,7 @@ public class Inventory
     //Constructors.
     /**
      * Creates an Inventory Object. Item list is empty. Total price is set to 0. Total volume is set to 0.
+     * @param None.
      */
     public Inventory()
     {
@@ -30,6 +31,8 @@ public class Inventory
     //Set Methodes. (Related to this Class)
     /**
      * Used to change the total price of the inventory.
+     * @param int : Inventory's total Price of all Items contained inside of it.
+     * @return void.
      */
     private void setTotalPrice(final int pTotalPrice){
         this.aTotalPrice = pTotalPrice;
@@ -37,6 +40,8 @@ public class Inventory
     
     /**
      * Used to change the total volume of the inventory.
+     * @param int : Inventory's total Volume of all Items contained inside of it.
+     * @return void.
      */
     private void setTotalVolume(final int pTotalVolume){
         this.aTotalVolume = pTotalVolume;
@@ -46,6 +51,8 @@ public class Inventory
     //Get Methodes. (Related to this Class)
     /**
      * Used to fetch the total price of the inventory.
+     * @param None.
+     * @return int : Inventory's total Price of all Items contained inside of it.
      */
     public int getTotalPrice(){
         return this.aTotalPrice;
@@ -53,6 +60,8 @@ public class Inventory
     
     /**
      * Used to fetch the total volume of the inventory.
+     * @param None.
+     * @return int : Inventory's total Volume of all Items contained inside of it.
      */
     public int getTotalVolume(){
         return this.aTotalVolume;
@@ -60,6 +69,8 @@ public class Inventory
     
     /**
      * Used to fetch an Item from the inventory.
+     * @param String : Item's Name.
+     * @return Item : Item that is contained inside of the inventory.
      */
     public Item getItem(final String pItemName){
         for(Item vElement : this.aItemList){
@@ -75,6 +86,8 @@ public class Inventory
     //Custom Methodes. (Related to this Class)
     /**
      * Used to check if the inventory has Item in the inventory.
+     * @param String : Item's Name.
+     * @return boolean : True if item is inside of the inventory else false.
      */
     public boolean hasItem(final String pItemName){
         return this.getItem(pItemName) != null;
@@ -82,6 +95,8 @@ public class Inventory
     
     /**
      * Used to add an item to the inventory.
+     * @param Item : Item that will be added to the inventory.
+     * @return void.
      */
     public void addItem(final Item pItem){
         this.aItemList.add(pItem);
@@ -91,6 +106,8 @@ public class Inventory
     
     /**
      * Used to remove an item from the inventory.
+     * @param Item : Item that will be removed from the inventory..
+     * @return void.
      */
     public void removeItem(final Item pItem){
         String pItemName = pItem.getName();
@@ -103,6 +120,8 @@ public class Inventory
     
     /**
      * Returns a simple list of all the items names in the inventory for use of Display.
+     * @param None.
+     * @return String : List of all items inside of the inventory.
      */
     private String getItemListString(){
         String vOutput = "";
@@ -117,6 +136,8 @@ public class Inventory
     
     /**
      * Returns a table of all items inside the inventory.
+     * @param None.
+     * @return String[] : List of all items inside of the inventory as a Table.
      */
     private String[] getItemListTable(){
         return this.getItemListString().split(", ");
@@ -124,6 +145,8 @@ public class Inventory
     
     /**
      * Returns a detailed listing of all items inside of the inventory.
+     * @param None.
+     * @return String : Detailed list of all items inside of the inventory.
      */
     public String getInventoryListDescription(){
         if(this.aItemList.isEmpty()){
@@ -151,6 +174,8 @@ public class Inventory
     //Overrides. (Related to this Class)
     /**
      * Custom override of .toString(). ("ItemList + " : " + TotalPrice").
+     * @param None.
+     * @return String : Basic information on the inventory.
      */
     @Override public String toString()
     {
@@ -165,6 +190,5 @@ public class Inventory
         }else{
             return "";
         }
-        
     }
 }
